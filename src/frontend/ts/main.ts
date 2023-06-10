@@ -17,10 +17,11 @@ class Main implements EventListenerObject,HttpResponse {
 
     }
     manejarRespueta(respueta: string) {
-        var lista: Array<Device> = JSON.parse(respueta);
 
-        
+        var lista: Array<Device> = JSON.parse(respueta);
         var ulDisp = document.getElementById("listaDisp");
+        ulDisp.innerHTML = "";
+
         for (var disp of lista) {
             var item: string = `<li class="collection-item avatar">`;
                     if(disp.type==1){
@@ -57,9 +58,6 @@ class Main implements EventListenerObject,HttpResponse {
         for (var disp of lista) {
             var checkPrender = document.getElementById("ck_" + disp.id);
             checkPrender.addEventListener("click", this);
-
-            
-
         }
         
     }
