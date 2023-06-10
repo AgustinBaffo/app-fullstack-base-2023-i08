@@ -84,7 +84,6 @@ class Main implements EventListenerObject,HttpResponse {
             var password: string = iPass.value;
 
             if (username.length > 3 && password.length>3) {
-                
                 //iriamos al servidor a consultar si el usuario y la cotraseña son correctas
                 var parrafo = document.getElementById("parrafo");
                 parrafo.innerHTML = "Espere...";
@@ -93,11 +92,19 @@ class Main implements EventListenerObject,HttpResponse {
             }
 
         } else if (elemento.id.startsWith("ck_")) {
-            //Ir al backend y aviasrle que el elemento cambio de estado
-            //TODO armar un objeto json con la clave id y status y llamar al metodo ejecutarBackend
-           
-            alert("El elemento " + elemento.id + " cambia de estado a =" + elemento.checked);
+            var device:Device = new Device();            
+
+            device.id = parseInt(elemento.id.slice(elemento.id.indexOf('_') + 1));
+            device.state = elemento.checked;
           
+            if(device.id !== null && device.id >= 0 && device.state !== null){
+                alert(JSON.stringify(device));
+                this.framework.ejecutarBackEnd("POST", "http://localhost:8000/state",this, device);
+            }
+            else{
+                alert("Error al cambiar de estado el elemento "+elemento.id+".");
+            }
+
         }else {
             //TODO cambiar esto, recuperadon de un input de tipo text
             //el nombre  de usuario y el nombre de la persona

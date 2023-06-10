@@ -25,6 +25,11 @@ app.post('/device/',function(req,res){
     
 });
 
+app.post('/state/',function(req,res){
+    // TODO update data base
+    console.log("llego = "+JSON.stringify(req.body));
+});
+
 app.get('/devices/', function(req, res, next) {
     utils.query("select * from Devices",function(err,rsp,fields){
         if(err!=null){
