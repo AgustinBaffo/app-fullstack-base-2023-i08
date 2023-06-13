@@ -63,6 +63,25 @@ app.delete('/device/',function(req,res){
     });
 });
 
+app.put('/device/',function(req,res){
+    console.log("editar dispositivo = "+req.body.id+" "+req.body.name+" "+req.body.description+" "+req.body.type+" "+req.body.state);
+    
+    //TODO: Validar datos.
+    utils.query("update Devices set name = '"+req.body.name+"', description = '"+req.body.description+"', type = "+req.body.type+", state = "+req.body.state+" where id = "+req.body.id,function(err,rsp,fields){
+        if(err!=null){
+            var msg = "Error al actualizar los datos."+err;
+            console.log(msg);
+            res.send(msg).status(409);
+        }
+        else{
+            var msg = "Elemento id = "+req.body.id+" actualizado correctamente.";
+            console.log(msg);
+            res.send(msg).status(200);
+        }
+    });
+});
+
+
 app.post('/state/',function(req,res){
     //TODO: validar datos.
     utils.query("update Devices set state = "+req.body.state+" where id = "+req.body.id,function(err,rsp,fields){

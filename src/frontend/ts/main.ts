@@ -64,7 +64,7 @@ class Main implements EventListenerObject, HttpResponse {
         this.framework.ejecutarBackEnd("GET", "http://localhost:8000/devices",this);
     }
 
-    handleEvent(event) {
+    handleEvent(event){
         var elemento =<HTMLInputElement> event.target;
         console.log(elemento)
         if (event.target.id == "btnListar") {
@@ -75,7 +75,7 @@ class Main implements EventListenerObject, HttpResponse {
                 //en un parrafo "etiqueta de tipo <p>"
 
             }
-        } 
+        }
         else if (event.target.id == "btnAgregar") {
             //TODO cambiar esto, recuperadon de un input de tipo text
             //el nombre  de usuario y el nombre de la persona
@@ -85,17 +85,24 @@ class Main implements EventListenerObject, HttpResponse {
             device.name = "nombre de prueba";
             device.state = false;
             device.type = 1;
-            device.id = 1;
-            
-            console.log("agregar");
             this.framework.ejecutarBackEnd("POST", "http://localhost:8000/device", this, device);
            
         }
         else if (event.target.id == "btnEliminar") {
-            //TODO cambiar recuperando input y mandando el elemento seleccionado
+            //TODO cambiar recuperando input y enviar el elemento seleccionado
             var device:Device = new Device();
             device.id = 1;
             this.framework.ejecutarBackEnd("DELETE", "http://localhost:8000/device", this, device);
+        }
+        else if (event.target.id == "btnEditar") {
+            //TODO cambiar recuperando input y enviar el elemento seleccionado
+            var device:Device = new Device();
+            device.description = "nueva descripcion";
+            device.name = "nuevo nombre";
+            device.state = false;
+            device.type = 1;
+            device.id =7;
+            this.framework.ejecutarBackEnd("PUT", "http://localhost:8000/device", this, device);
         }
         else if (event.target.id == "btnLogin") {
 
@@ -146,8 +153,6 @@ window.addEventListener("load", () => {
     btnListar.addEventListener("click", main);
 
 
-
-
     var btnAgregar: HTMLElement = document.getElementById("btnAgregar");
     btnAgregar.addEventListener("click", main);
 
@@ -157,4 +162,6 @@ window.addEventListener("load", () => {
     var btnEliminar: HTMLElement = document.getElementById("btnEliminar");
     btnEliminar.addEventListener("click", main);
 
+    var btnEditar: HTMLElement = document.getElementById("btnEditar");
+    btnEditar.addEventListener("click", main);
 });
