@@ -1,13 +1,13 @@
 class Persona {
-  public nombre:string;
+  public nombre: string;
   public dni: number;
 
   constructor(nombre: string) {
-   
-      this.nombre = nombre;
+
+    this.nombre = nombre;
   }
-  
+
   public saludar() {
-      console.log("hola soy " + this.nombre);
+    console.log("hola soy " + this.nombre);
   }
 }

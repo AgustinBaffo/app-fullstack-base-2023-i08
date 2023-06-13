@@ -1,4 +1,4 @@
-interface ComportamientoAcceso{
+interface ComportamientoAcceso {
   accesoAmodificaciones(): boolean;
-  accesoAlLogin():boolean;
+  accesoAlLogin(): boolean;
 }

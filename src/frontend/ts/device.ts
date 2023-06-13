@@ -1,4 +1,4 @@
-class Device{
+class Device {
   public id: number;
   public description: string;
   public name: string;
