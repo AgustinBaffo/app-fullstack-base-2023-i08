@@ -1,6 +1,6 @@
 class Framework{
 
-  public ejecutarBackEnd(method:string,url:string,callback:HttpResponse,data?:any) {
+  public ejecutarBackEnd(method:string, url:string, callback:HttpResponse, data?:any) {
     var xmlReq = new XMLHttpRequest();        
     xmlReq.onreadystatechange = () => {
         if (xmlReq.readyState == 4) {
@@ -20,8 +20,5 @@ class Framework{
     } else {
       xmlReq.send();
     }
-    
-//
   }
-
 }

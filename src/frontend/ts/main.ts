@@ -1,6 +1,6 @@
 var M;
 
-class Main implements EventListenerObject,HttpResponse {
+class Main implements EventListenerObject, HttpResponse {
     users: Array<Usuario> = new Array();
     framework: Framework = new Framework();
    
@@ -8,16 +8,15 @@ class Main implements EventListenerObject,HttpResponse {
         var usr1 = new Usuario("mramos", "Matias");
         var usr2 = new Usuario("jlopez", "Juan");
 
-
         this.users.push(usr1);
         this.users.push(usr2);
 
         var obj = { "nombre": "Matias", "edad": 35, "masculino": true };
-        //alert(JSON.stringify(obj));
-
     }
+
     manejarRespueta(respueta: string) {
 
+        console.log("respuesta: \n\n"+respueta);
         var lista: Array<Device> = JSON.parse(respueta);
         var ulDisp = document.getElementById("listaDisp");
         ulDisp.innerHTML = "";
@@ -59,8 +58,8 @@ class Main implements EventListenerObject,HttpResponse {
             var checkPrender = document.getElementById("ck_" + disp.id);
             checkPrender.addEventListener("click", this);
         }
-        
     }
+
     obtenerDispositivo() {
         this.framework.ejecutarBackEnd("GET", "http://localhost:8000/devices",this);
     }
@@ -74,9 +73,31 @@ class Main implements EventListenerObject,HttpResponse {
 
                 //TODO cambiar ESTO por mostrar estos datos separados por "-" 
                 //en un parrafo "etiqueta de tipo <p>"
-              
+
             }
-        } else if (event.target.id == "btnLogin") {
+        } 
+        else if (event.target.id == "btnAgregar") {
+            //TODO cambiar esto, recuperadon de un input de tipo text
+            //el nombre  de usuario y el nombre de la persona
+            // validando que no sean vacios
+            var device:Device = new Device();
+            device.description = "descripcion de prueba";
+            device.name = "nombre de prueba";
+            device.state = false;
+            device.type = 1;
+            device.id = 1;
+            
+            console.log("agregar");
+            this.framework.ejecutarBackEnd("POST", "http://localhost:8000/device", this, device);
+           
+        }
+        else if (event.target.id == "btnEliminar") {
+            //TODO cambiar recuperando input y mandando el elemento seleccionado
+            var device:Device = new Device();
+            device.id = 1;
+            this.framework.ejecutarBackEnd("DELETE", "http://localhost:8000/device", this, device);
+        }
+        else if (event.target.id == "btnLogin") {
 
             var iUser = <HTMLInputElement>document.getElementById("iUser");
             var iPass = <HTMLInputElement>document.getElementById("iPass");
@@ -91,27 +112,23 @@ class Main implements EventListenerObject,HttpResponse {
                 alert("el nombre de usuario es invalido");
             }
 
-        } else if (elemento.id.startsWith("ck_")) {
-            var device:Device = new Device();            
+        } 
+        else if (elemento.id.startsWith("ck_")) {
 
+            var device:Device = new Device();
             device.id = parseInt(elemento.id.slice(elemento.id.indexOf('_') + 1));
             device.state = elemento.checked;
           
             if(device.id !== null && device.id >= 0 && device.state !== null){
-                alert(JSON.stringify(device));
                 this.framework.ejecutarBackEnd("POST", "http://localhost:8000/state",this, device);
             }
             else{
                 alert("Error al cambiar de estado el elemento "+elemento.id+".");
             }
-
-        }else {
-            //TODO cambiar esto, recuperadon de un input de tipo text
-            //el nombre  de usuario y el nombre de la persona
-            // validando que no sean vacios
-            console.log("yendo al back");
-            this.framework.ejecutarBackEnd("POST", "http://localhost:8000/device", this, {});
-           
+        
+        }
+        else{
+            console.log("Evento desconocido");
         }
     }
 }
@@ -136,5 +153,8 @@ window.addEventListener("load", () => {
 
     var btnLogin = document.getElementById("btnLogin");
     btnLogin.addEventListener("click", main);
+
+    var btnEliminar: HTMLElement = document.getElementById("btnEliminar");
+    btnEliminar.addEventListener("click", main);
 
 });

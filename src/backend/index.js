@@ -16,7 +16,7 @@ app.use(express.static('/home/node/app/static/'));
 app.get('/devices/', function(req, res, gnext) {
     utils.query("select * from Devices",function(err,rsp,fields){
         if(err!=null){
-            var msg = "Error al buscar los datos.";
+            var msg = "Error al buscar los datos."+err;
             console.log(msg);
             res.send(msg).status(409);
         }
@@ -28,22 +28,30 @@ app.get('/devices/', function(req, res, gnext) {
 });
 
 app.post('/device/',function(req,res){
-    console.log("llego = "+req.body.id);
-    if(req.body.texto==undefined || req.body.texto==null || req.body.texto.length<4){
-        res.status(409);
-        res.send("el texto no es valido");
-    }else{
-        
-        res.status(200)
-        res.send("Todo ok");
-    }
-    
+    console.log("agregar dispositivo = "+req.body.name+" "+req.body.description+" "+req.body.type+" "+req.body.state);
+
+    //TODO: validar datos.
+    var qry =  "insert into Devices (name, description, type, state) values ('"+req.body.name+"','"+req.body.description+"',"+req.body.type+","+req.body.state+")";
+    console.log(qry);
+    utils.query(qry,function(err,rsp,fields){
+        if(err!=null){
+            var msg = "Error al insertar los datos: "+err;
+            console.log(msg);
+            res.send(msg).status(409);
+        }
+        else{
+            var msg = "Elemento insertado correctamente.";
+            console.log(msg);
+            res.send(msg).status(200);
+        }
+    });
 });
 
 app.delete('/device/',function(req,res){
+    console.log("eliminar elemento id = "+req.body.id);
     utils.query("delete from Devices where id = "+req.body.id,function(err,rsp,fields){
         if(err!=null){
-            var msg = "Error al borrar los datos.";
+            var msg = "Error al borrar los datos."+err;
             console.log(msg);
             res.send(msg).status(409);
         }
@@ -55,12 +63,11 @@ app.delete('/device/',function(req,res){
     });
 });
 
-
-
 app.post('/state/',function(req,res){
+    //TODO: validar datos.
     utils.query("update Devices set state = "+req.body.state+" where id = "+req.body.id,function(err,rsp,fields){
         if(err!=null){
-            var msg = "Error al actualizar los datos.";
+            var msg = "Error al actualizar los datos."+err;
             console.log(msg);
             res.send(msg).status(409);
         }
