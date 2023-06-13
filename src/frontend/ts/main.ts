@@ -23,65 +23,65 @@ class Main implements EventListenerObject, HttpResponse {
         }
     }
 
+    updateDevicesList() {
+
+        var listarCallback = (res: string) => {
+            var lista: Array<Device> = JSON.parse(res);
+            var ulDisp = document.getElementById("listaDisp");
+            ulDisp.innerHTML = "";
+
+            for (var disp of lista) {
+                var item: string = `<li class="collection-item avatar">`;
+                if (disp.type == 1) {
+                    item += '<img src="static/images/lightbulb.png" alt = "" class="circle" >'
+                } else {
+                    item += '<img src="static/images/window.png" alt = "" class="circle" >'
+                }
+
+                item += `<span class="titulo">${disp.name}</span>
+                              <p>
+                              ${disp.description}
+                              </p>
+                              <a href="#!" class="secondary-content">
+                              <div class="switch">
+                              <label>
+                                Off
+                                `;
+                if (disp.state) {
+                    item += `<input type="checkbox" checked id="ck_${disp.id}">`;
+                } else {
+                    item += `<input type="checkbox" id="ck_${disp.id}" >`;
+                }
+                item += `
+                                <span class="lever"></span>
+                                On
+                              </label>
+                            </div>
+                              </a>
+                            </li>`;
+
+                ulDisp.innerHTML += item;
+            }
+
+            for (var disp of lista) {
+                var checkPrender = document.getElementById("ck_" + disp.id);
+                checkPrender.addEventListener("click", this);
+            }
+        };
+
+        this.framework.ejecutarBackEnd("GET", "http://localhost:8000/devices", this, {}, listarCallback);
+    }
+
     handleEvent(event) {
         var elemento = <HTMLInputElement>event.target;
         console.log(elemento)
         if (event.target.id == "btnListar") {
 
-
-            var listarCallback = (res: string) => {
-                
-
-                var lista: Array<Device> = JSON.parse(res);
-                var ulDisp = document.getElementById("listaDisp");
-                ulDisp.innerHTML = "";
-
-                for (var disp of lista) {
-                    var item: string = `<li class="collection-item avatar">`;
-                    if (disp.type == 1) {
-                        item += '<img src="static/images/lightbulb.png" alt = "" class="circle" >'
-                    } else {
-                        item += '<img src="static/images/window.png" alt = "" class="circle" >'
-                    }
-
-                    item += `<span class="titulo">${disp.name}</span>
-                                  <p>
-                                  ${disp.description}
-                                  </p>
-                                  <a href="#!" class="secondary-content">
-                                  <div class="switch">
-                                  <label>
-                                    Off
-                                    `;
-                    if (disp.state) {
-                        item += `<input type="checkbox" checked id="ck_${disp.id}">`;
-                    } else {
-                        item += `<input type="checkbox" id="ck_${disp.id}" >`;
-                    }
-                    item += `
-                                    <span class="lever"></span>
-                                    On
-                                  </label>
-                                </div>
-                                  </a>
-                                </li>`;
-
-                    ulDisp.innerHTML += item;
-                }
-
-                for (var disp of lista) {
-                    var checkPrender = document.getElementById("ck_" + disp.id);
-                    checkPrender.addEventListener("click", this);
-                }
-            };
-
-            this.framework.ejecutarBackEnd("GET", "http://localhost:8000/devices", this, {}, listarCallback);
+            this.updateDevicesList();
 
             for (var user of this.users) {
-
                 //TODO cambiar ESTO por mostrar estos datos separados por "-" 
                 //en un parrafo "etiqueta de tipo <p>"
-
             }
         }
 
@@ -95,14 +95,25 @@ class Main implements EventListenerObject, HttpResponse {
             device.state = false;
             device.type = 1;
 
-            this.framework.ejecutarBackEnd("POST", "http://localhost:8000/device", this, device);
+            var agregarCallback = (res: string) => {
+                this.updateDevicesList();
+            }
+
+            this.framework.ejecutarBackEnd("POST", "http://localhost:8000/device", this, device, agregarCallback);
         }
         else if (event.target.id == "btnEliminar") {
             //TODO cambiar recuperando input y enviar el elemento seleccionado
             var device: Device = new Device();
             device.id = 1;
-            this.framework.ejecutarBackEnd("DELETE", "http://localhost:8000/device", this, device);
+
+
+            var eliminarCallback = (res: string) => {
+                this.updateDevicesList();
+            }
+
+            this.framework.ejecutarBackEnd("DELETE", "http://localhost:8000/device", this, device, eliminarCallback);
         }
+
         else if (event.target.id == "btnEditar") {
             //TODO cambiar recuperando input y enviar el elemento seleccionado
             var device: Device = new Device();
@@ -136,7 +147,12 @@ class Main implements EventListenerObject, HttpResponse {
             device.state = elemento.checked;
 
             if (device.id !== null && device.id >= 0 && device.state !== null) {
-                this.framework.ejecutarBackEnd("POST", "http://localhost:8000/state", this, device);
+
+                var cambiarEstadoCallback = (res: string) => {
+                    this.updateDevicesList();
+                }
+
+                this.framework.ejecutarBackEnd("POST", "http://localhost:8000/state", this, device, cambiarEstadoCallback);
             }
             else {
                 alert("Error al cambiar de estado el elemento " + elemento.id + ".");
