@@ -1,4 +1,3 @@
 interface HttpResponse {
-
-  manejarRespueta(response: string);
+  manejarRespuesta(response: string, callback: (response: string) => void);
 }

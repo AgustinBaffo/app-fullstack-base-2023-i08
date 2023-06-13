@@ -14,61 +14,69 @@ class Main implements EventListenerObject, HttpResponse {
         var obj = { "nombre": "Matias", "edad": 35, "masculino": true };
     }
 
-    manejarRespueta(respueta: string) {
+    manejarRespuesta(res: string, callback: (res: string) => void) {
 
-        console.log("respuesta: \n\n" + respueta);
-        var lista: Array<Device> = JSON.parse(respueta);
-        var ulDisp = document.getElementById("listaDisp");
-        ulDisp.innerHTML = "";
-
-        for (var disp of lista) {
-            var item: string = `<li class="collection-item avatar">`;
-            if (disp.type == 1) {
-                item += '<img src="static/images/lightbulb.png" alt = "" class="circle" >'
-            } else {
-                item += '<img src="static/images/window.png" alt = "" class="circle" >'
-            }
-
-            item += `<span class="titulo">${disp.name}</span>
-                          <p>
-                          ${disp.description}
-                          </p>
-                          <a href="#!" class="secondary-content">
-                          <div class="switch">
-                          <label>
-                            Off
-                            `;
-            if (disp.state) {
-                item += `<input type="checkbox" checked id="ck_${disp.id}">`;
-            } else {
-                item += `<input type="checkbox" id="ck_${disp.id}" >`;
-            }
-            item += `
-                            <span class="lever"></span>
-                            On
-                          </label>
-                        </div>
-                          </a>
-                        </li>`;
-
-            ulDisp.innerHTML += item;
+        console.log("Respuesta del servidor: " + res);
+        // Invocar el callback personalizado si existe. Si no existe, solo publico la respuesta.
+        if (callback) {
+            callback(res);
         }
-
-        for (var disp of lista) {
-            var checkPrender = document.getElementById("ck_" + disp.id);
-            checkPrender.addEventListener("click", this);
-        }
-    }
-
-    obtenerDispositivo() {
-        this.framework.ejecutarBackEnd("GET", "http://localhost:8000/devices", this);
     }
 
     handleEvent(event) {
         var elemento = <HTMLInputElement>event.target;
         console.log(elemento)
         if (event.target.id == "btnListar") {
-            this.obtenerDispositivo();
+
+
+            var listarCallback = (res: string) => {
+                
+
+                var lista: Array<Device> = JSON.parse(res);
+                var ulDisp = document.getElementById("listaDisp");
+                ulDisp.innerHTML = "";
+
+                for (var disp of lista) {
+                    var item: string = `<li class="collection-item avatar">`;
+                    if (disp.type == 1) {
+                        item += '<img src="static/images/lightbulb.png" alt = "" class="circle" >'
+                    } else {
+                        item += '<img src="static/images/window.png" alt = "" class="circle" >'
+                    }
+
+                    item += `<span class="titulo">${disp.name}</span>
+                                  <p>
+                                  ${disp.description}
+                                  </p>
+                                  <a href="#!" class="secondary-content">
+                                  <div class="switch">
+                                  <label>
+                                    Off
+                                    `;
+                    if (disp.state) {
+                        item += `<input type="checkbox" checked id="ck_${disp.id}">`;
+                    } else {
+                        item += `<input type="checkbox" id="ck_${disp.id}" >`;
+                    }
+                    item += `
+                                    <span class="lever"></span>
+                                    On
+                                  </label>
+                                </div>
+                                  </a>
+                                </li>`;
+
+                    ulDisp.innerHTML += item;
+                }
+
+                for (var disp of lista) {
+                    var checkPrender = document.getElementById("ck_" + disp.id);
+                    checkPrender.addEventListener("click", this);
+                }
+            };
+
+            this.framework.ejecutarBackEnd("GET", "http://localhost:8000/devices", this, {}, listarCallback);
+
             for (var user of this.users) {
 
                 //TODO cambiar ESTO por mostrar estos datos separados por "-" 
@@ -76,6 +84,7 @@ class Main implements EventListenerObject, HttpResponse {
 
             }
         }
+
         else if (event.target.id == "btnAgregar") {
             //TODO cambiar esto, recuperadon de un input de tipo text
             //el nombre  de usuario y el nombre de la persona
@@ -85,8 +94,8 @@ class Main implements EventListenerObject, HttpResponse {
             device.name = "nombre de prueba";
             device.state = false;
             device.type = 1;
-            this.framework.ejecutarBackEnd("POST", "http://localhost:8000/device", this, device);
 
+            this.framework.ejecutarBackEnd("POST", "http://localhost:8000/device", this, device);
         }
         else if (event.target.id == "btnEliminar") {
             //TODO cambiar recuperando input y enviar el elemento seleccionado
