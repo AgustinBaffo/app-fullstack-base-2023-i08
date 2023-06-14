@@ -88,6 +88,20 @@ class Main implements EventListenerObject, HttpResponse {
 
         this.framework.ejecutarBackEnd("GET", "http://localhost:8000/devices", this, {}, listarCallback);
     }
+    clearFormEditDevice(){
+        var name = <HTMLInputElement>document.getElementById("editNameDevice");
+        name.value = "";
+        var description = <HTMLInputElement>document.getElementById("editDescriptionDevice");
+        description.value = "";
+        var type = <HTMLSelectElement>document.getElementById("editTypeDevice");
+
+        console.log(type);
+        console.log("value: " + type.value + " | selectedIndex: " + type.selectedIndex);
+
+        // TODO fix this reset
+        type.value = "";        
+        type.selectedIndex = 0;
+    }
 
     handleEvent(event) {
         var elemento = <HTMLInputElement>event.target;
@@ -101,22 +115,40 @@ class Main implements EventListenerObject, HttpResponse {
                 //en un parrafo "etiqueta de tipo <p>"
             }
         }
+        else if (event.target.id == "saveEditDevice") {
+            
+            console.log("saveEditDevice");
 
-        else if (event.target.id == "btnAgregar") {
-            //TODO cambiar esto, recuperadon de un input de tipo text
-            //el nombre  de usuario y el nombre de la persona
-            // validando que no sean vacios
+            var name = <HTMLInputElement>document.getElementById("editNameDevice");
+            var description = <HTMLInputElement>document.getElementById("editDescriptionDevice");
+            var type = <HTMLSelectElement>document.getElementById("editTypeDevice");
+
+            // TODO: Validar nombres
+            
             var device: Device = new Device();
-            device.description = "descripcion de prueba";
-            device.name = "nombre de prueba";
-            device.state = false;
-            device.type = 1;
+            device.description = description.value;
+            device.name = name.value;
+            device.state = false;   // TODO use default
+            device.type = parseInt(type.value, 0);
+
+            this.clearFormEditDevice();
 
             var agregarCallback = (res: string) => {
                 this.updateDevicesList();
             }
 
             this.framework.ejecutarBackEnd("POST", "http://localhost:8000/device", this, device, agregarCallback);
+        }
+        else if (event.target.id == "cancelEditDevice") {
+            
+            console.log("cancelEditDevice");
+            
+            // TODO: Clear fields
+            // Obtener html del nombre, descripcion y tipo y reiniciar los valores
+            this.clearFormEditDevice();
+            
+            
+            
         }
         else if (event.target.id == "btnLogin") {
 
@@ -224,8 +256,11 @@ window.addEventListener("load", () => {
     btnLogin.addEventListener("click", main);
 
     // TODO this should be called after GUARDAR from modal is pressed
-    // var btnAgregar: HTMLElement = document.getElementById("btnAgregar");
-    // btnAgregar.addEventListener("click", main);
+    var btnAgregar: HTMLElement = document.getElementById("saveEditDevice");
+    btnAgregar.addEventListener("click", main);
+
+    var cancelEditDevice: HTMLElement = document.getElementById("cancelEditDevice");
+    cancelEditDevice.addEventListener("click", main);
 
     var modalEdit: HTMLElement = document.getElementById("editDevice");
     M.Modal.init(modalEdit);

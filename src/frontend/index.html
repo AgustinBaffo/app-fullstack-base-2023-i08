@@ -72,27 +72,28 @@
                     <h4>Editar dispositivo</h4>
                     <form>
                         <div class="input-field">
-                            <input id="nombre" type="text" class="validate">
-                            <label for="nombre">Nombre</label>
+                            <input id="editNameDevice" type="text" class="validate">
+                            <label for="editNameDevice">Nombre</label>
                         </div>
                         <div class="input-field">
-                            <input id="descripcion" type="text" class="validate">
-                            <label for="descripcion">Descripción</label>
+                            <input id="editDescriptionDevice" type="text" class="validate">
+                            <label for="editDescriptionDevice">Descripción</label>
                         </div>
                         <div class="input-field">
-                            <select id="tipo">
+                            <select id="editTypeDevice">
                                 <option value="" disabled selected>Seleccione un tipo</option>
-                                <option value="Lampara">Lámpara</option>
-                                <option value="Ventilador">Ventilador</option>
-                                <option value="Persiana">Persiana</option>
+                                <option value="1">Lámpara</option>
+                                <option value="2">Ventilador</option>
+                                <option value="3">Persiana</option>
+                                <option value="0">Otro</option>
                             </select>
                             <label>Tipo</label>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <a href="#!" class="modal-close waves-effect waves-green btn">Guardar</a>
-                    <a href="#!" class="modal-close waves-effect waves-red btn">Cancelar</a>
+                    <a href="#!" class="modal-close waves-effect waves-green btn" id="saveEditDevice">Guardar</a>
+                    <a href="#!" class="modal-close waves-effect waves-red btn" id="cancelEditDevice">Cancelar</a>
                 </div>
             </div>
             <!-- End modal -->
