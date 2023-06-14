@@ -29,7 +29,7 @@ class Main implements EventListenerObject, HttpResponse {
             var lista: Array<Device> = JSON.parse(res);
             var ulDisp = document.getElementById("listaDisp");
             ulDisp.innerHTML = "";
-
+    
             for (var disp of lista) {
                 var item: string = `<li class="collection-item avatar">`;
                 if (disp.type == 1) {
@@ -37,41 +37,61 @@ class Main implements EventListenerObject, HttpResponse {
                 } else {
                     item += '<img src="static/images/window.png" alt = "" class="circle" >'
                 }
-
+    
                 item += `<span class="titulo">${disp.name}</span>
                               <p>
                               ${disp.description}
                               </p>
-                              <a href="#!" class="secondary-content">
-                              <div class="switch">
-                              <label>
-                                Off
-                                `;
+                              <div class="switch-container">
+                                  <a href="#!" class="secondary-content dropdown-trigger" data-target="dropdown_${disp.id}">
+                                      <i class="material-icons">more_vert</i>
+                                  </a>
+                                  <div class="switch">
+                                      <label>
+                                          Off
+                                          `;
                 if (disp.state) {
                     item += `<input type="checkbox" checked id="ck_${disp.id}">`;
                 } else {
                     item += `<input type="checkbox" id="ck_${disp.id}" >`;
                 }
                 item += `
-                                <span class="lever"></span>
-                                On
-                              </label>
-                            </div>
-                              </a>
-                            </li>`;
-
+                                          <span class="lever"></span>
+                                          On
+                                      </label>
+                                  </div>
+                              </div>
+                          </li>
+                          
+                          <ul id="dropdown_${disp.id}" class="dropdown-content dropdown-content">
+                            <li><a href="#!" id="editDevice_${disp.id}">Editar</a></li>
+                            <li><a href="#!" class="delete-option" id="deleteDevice_${disp.id}">Eliminar</a></li>
+                          </ul>`;
+    
                 ulDisp.innerHTML += item;
             }
-
+    
             for (var disp of lista) {
                 var checkPrender = document.getElementById("ck_" + disp.id);
                 checkPrender.addEventListener("click", this);
+    
+                var editDevice = document.getElementById("editDevice_" + disp.id);
+                editDevice.addEventListener("click", this);
+    
+                var deleteDevice = document.getElementById("deleteDevice_" + disp.id);
+                deleteDevice.addEventListener("click", this);
             }
+    
+            // Inicializar los elementos Dropdown
+            var dropdowns = document.querySelectorAll('.dropdown-trigger');
+            M.Dropdown.init(dropdowns, {
+                alignment: 'right'
+            });
         };
-
+    
         this.framework.ejecutarBackEnd("GET", "http://localhost:8000/devices", this, {}, listarCallback);
     }
-
+    
     handleEvent(event) {
         var elemento = <HTMLInputElement>event.target;
         console.log(elemento)
@@ -101,19 +121,6 @@ class Main implements EventListenerObject, HttpResponse {
 
             this.framework.ejecutarBackEnd("POST", "http://localhost:8000/device", this, device, agregarCallback);
         }
-        else if (event.target.id == "btnEliminar") {
-            //TODO cambiar recuperando input y enviar el elemento seleccionado
-            var device: Device = new Device();
-            device.id = 1;
-
-
-            var eliminarCallback = (res: string) => {
-                this.updateDevicesList();
-            }
-
-            this.framework.ejecutarBackEnd("DELETE", "http://localhost:8000/device", this, device, eliminarCallback);
-        }
-
         else if (event.target.id == "btnEditar") {
             //TODO cambiar recuperando input y enviar el elemento seleccionado
             var device: Device = new Device();
@@ -159,8 +166,48 @@ class Main implements EventListenerObject, HttpResponse {
             }
 
         }
+        else if (elemento.id.startsWith("ddOptions_")) {
+
+            var id: number = parseInt(elemento.id.slice(elemento.id.indexOf('_') + 1));
+
+            console.log("option for id: " + id);
+            // if (device.id !== null && device.id >= 0 && device.state !== null) {
+
+            //     var cambiarEstadoCallback = (res: string) => {
+            //         this.updateDevicesList();
+            //     }
+
+            //     this.framework.ejecutarBackEnd("POST", "http://localhost:8000/state", this, device, cambiarEstadoCallback);
+            // }
+            // else {
+            //     alert("Error al cambiar de estado el elemento " + elemento.id + ".");
+            // }
+
+        } 
+        else if (elemento.id.startsWith("deleteDevice_")) {
+
+            var device: Device = new Device();
+            device.id = parseInt(elemento.id.slice(elemento.id.indexOf('_') + 1));;
+            console.log("delete  id: " + device.id);
+
+            var eliminarCallback = (res: string) => {
+                this.updateDevicesList();
+            }
+
+            this.framework.ejecutarBackEnd("DELETE", "http://localhost:8000/device", this, device, eliminarCallback);
+
+
+        }
+        else if (elemento.id.startsWith("editDevice_")) {
+
+            var device: Device = new Device();
+            device.id = parseInt(elemento.id.slice(elemento.id.indexOf('_') + 1));;
+            console.log("edit  id: " + device.id);
+            //TODO: editar el elemento seleccionado
+
+        }
         else {
-            console.log("Evento desconocido");
+            console.log("Evento desconocido: " + event.id);
         }
     }
 }
@@ -183,9 +230,6 @@ window.addEventListener("load", () => {
 
     var btnLogin = document.getElementById("btnLogin");
     btnLogin.addEventListener("click", main);
-
-    var btnEliminar: HTMLElement = document.getElementById("btnEliminar");
-    btnEliminar.addEventListener("click", main);
 
     var btnEditar: HTMLElement = document.getElementById("btnEditar");
     btnEditar.addEventListener("click", main);

@@ -8,8 +8,17 @@ body {
 main {
     flex: 1 0 auto;
 }
+
 .titulo{
     color: brown;
     font-weight: bold;
     font-size: large;
+}
+
+.dropdown-content li a {
+  color: grey;
+}
+
+.dropdown-content li a.delete-option {
+  color: red;
 }
