@@ -29,7 +29,7 @@ class Main implements EventListenerObject, HttpResponse {
             var lista: Array<Device> = JSON.parse(res);
             var ulDisp = document.getElementById("listaDisp");
             ulDisp.innerHTML = "";
-    
+
             for (var disp of lista) {
                 var item: string = `<li class="collection-item avatar">`;
                 if (disp.type == 1) {
@@ -37,61 +37,58 @@ class Main implements EventListenerObject, HttpResponse {
                 } else {
                     item += '<img src="static/images/window.png" alt = "" class="circle" >'
                 }
-    
-                item += `<span class="titulo">${disp.name}</span>
-                              <p>
-                              ${disp.description}
-                              </p>
-                              <div class="switch-container">
-                                  <a href="#!" class="secondary-content dropdown-trigger" data-target="dropdown_${disp.id}">
-                                      <i class="material-icons">more_vert</i>
-                                  </a>
-                                  <div class="switch">
-                                      <label>
-                                          Off
-                                          `;
-                if (disp.state) {
-                    item += `<input type="checkbox" checked id="ck_${disp.id}">`;
-                } else {
-                    item += `<input type="checkbox" id="ck_${disp.id}" >`;
-                }
+
                 item += `
-                                          <span class="lever"></span>
-                                          On
-                                      </label>
-                                  </div>
-                              </div>
-                          </li>
-                          
-                          <ul id="dropdown_${disp.id}" class="dropdown-content dropdown-content">
+                <div class="name"><span class="titulo">${disp.name}</span>
+                        <p>${disp.description}</p></div>
+
+                        
+                            <div class="switch">
+                                <label>Off`;
+                                    if (disp.state) {
+                                        item += `<input type="checkbox" checked id="ck_${disp.id}">`;
+                                    } 
+                                    else {
+                                        item += `<input type="checkbox" id="ck_${disp.id}" >`;
+                                    }
+                                    item += `<span class="lever"></span>
+                                On</label>
+                                </div>
+                            </div>
+                            
+                            <a href="#!" class="secondary-content dropdown-trigger" data-target="dropdown_${disp.id}">
+                                <i class="material-icons">more_vert</i>
+                            </a>
+
+                        <ul id="dropdown_${disp.id}" class="dropdown-content dropdown-content">
                             <li><a href="#!" id="editDevice_${disp.id}">Editar</a></li>
                             <li><a href="#!" class="delete-option" id="deleteDevice_${disp.id}">Eliminar</a></li>
-                          </ul>`;
-    
+                        </ul>`;
+
                 ulDisp.innerHTML += item;
             }
-    
+
             for (var disp of lista) {
                 var checkPrender = document.getElementById("ck_" + disp.id);
                 checkPrender.addEventListener("click", this);
-    
+
                 var editDevice = document.getElementById("editDevice_" + disp.id);
                 editDevice.addEventListener("click", this);
-    
+
                 var deleteDevice = document.getElementById("deleteDevice_" + disp.id);
                 deleteDevice.addEventListener("click", this);
             }
-    
+
             // Inicializar los elementos Dropdown
             var dropdowns = document.querySelectorAll('.dropdown-trigger');
             M.Dropdown.init(dropdowns, {
                 alignment: 'right'
             });
         };
-    
+
         this.framework.ejecutarBackEnd("GET", "http://localhost:8000/devices", this, {}, listarCallback);
     }
-    
+
     handleEvent(event) {
         var elemento = <HTMLInputElement>event.target;
         console.log(elemento)
@@ -120,16 +117,6 @@ class Main implements EventListenerObject, HttpResponse {
             }
 
             this.framework.ejecutarBackEnd("POST", "http://localhost:8000/device", this, device, agregarCallback);
-        }
-        else if (event.target.id == "btnEditar") {
-            //TODO cambiar recuperando input y enviar el elemento seleccionado
-            var device: Device = new Device();
-            device.description = "nueva descripcion";
-            device.name = "nuevo nombre";
-            device.state = false;
-            device.type = 1;
-            device.id = 7;
-            this.framework.ejecutarBackEnd("PUT", "http://localhost:8000/device", this, device);
         }
         else if (event.target.id == "btnLogin") {
 
@@ -183,7 +170,7 @@ class Main implements EventListenerObject, HttpResponse {
             //     alert("Error al cambiar de estado el elemento " + elemento.id + ".");
             // }
 
-        } 
+        }
         else if (elemento.id.startsWith("deleteDevice_")) {
 
             var device: Device = new Device();
@@ -200,10 +187,19 @@ class Main implements EventListenerObject, HttpResponse {
         }
         else if (elemento.id.startsWith("editDevice_")) {
 
+            // TODO: Get real data
             var device: Device = new Device();
-            device.id = parseInt(elemento.id.slice(elemento.id.indexOf('_') + 1));;
-            console.log("edit  id: " + device.id);
-            //TODO: editar el elemento seleccionado
+            device.id = parseInt(elemento.id.slice(elemento.id.indexOf('_') + 1));
+            device.name = "nuevo nombre";
+            device.description = "nueva descripcion";
+            device.state = true;
+            device.type = 1;
+
+            var editarCallback = (res: string) => {
+                this.updateDevicesList();
+            }
+
+            this.framework.ejecutarBackEnd("PUT", "http://localhost:8000/device", this, device, editarCallback);
 
         }
         else {
@@ -230,7 +226,4 @@ window.addEventListener("load", () => {
 
     var btnLogin = document.getElementById("btnLogin");
     btnLogin.addEventListener("click", main);
-
-    var btnEditar: HTMLElement = document.getElementById("btnEditar");
-    btnEditar.addEventListener("click", main);
 });
