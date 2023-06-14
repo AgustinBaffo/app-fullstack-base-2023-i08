@@ -23,7 +23,9 @@
             <div class="nav-wrapper">
                 <a href="#!" class="brand-logo left" style="margin-left: 15px;">Smart Home</a>
                 <ul id="nav-mobile" class="right" style="margin-right: 15px;">
-                    <li><a href="https://github.com/AgustinBaffo/app-fullstack-base-2023-i08/blob/master/README.md">Help</a></li>
+                    <li><a
+                            href="https://github.com/AgustinBaffo/app-fullstack-base-2023-i08/blob/master/README.md">Help</a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -59,9 +61,42 @@
                     <button class="btn waves-effect waves-light button-view" id="btnListar">Listar</button>
                 </div>
                 <div class="col s12 m4 l8 xl6 ">
-                    <a class="btn-floating btn-large waves-effect waves-light" ><i class="material-icons" id="btnAgregar">add</i></a>
+                    <a class="btn-floating btn-large waves-effect waves-light modal-trigger" href="#editDevice"><i
+                            class="material-icons" id="btnAgregar">add</i></a>
                 </div>
             </div>
+
+            <!-- Start modal to edit/add devices -->
+            <div id="editDevice" class="modal">
+                <div class="modal-content">
+                    <h4>Editar dispositivo</h4>
+                    <form>
+                        <div class="input-field">
+                            <input id="nombre" type="text" class="validate">
+                            <label for="nombre">Nombre</label>
+                        </div>
+                        <div class="input-field">
+                            <input id="descripcion" type="text" class="validate">
+                            <label for="descripcion">Descripción</label>
+                        </div>
+                        <div class="input-field">
+                            <select id="tipo">
+                                <option value="" disabled selected>Seleccione un tipo</option>
+                                <option value="Lampara">Lámpara</option>
+                                <option value="Ventilador">Ventilador</option>
+                                <option value="Persiana">Persiana</option>
+                            </select>
+                            <label>Tipo</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a href="#!" class="modal-close waves-effect waves-green btn">Guardar</a>
+                    <a href="#!" class="modal-close waves-effect waves-red btn">Cancelar</a>
+                </div>
+            </div>
+            <!-- End modal -->
+
         </div>
     </main>
 

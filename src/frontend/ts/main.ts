@@ -45,13 +45,13 @@ class Main implements EventListenerObject, HttpResponse {
                         
                             <div class="switch">
                                 <label>Off`;
-                                    if (disp.state) {
-                                        item += `<input type="checkbox" checked id="ck_${disp.id}">`;
-                                    } 
-                                    else {
-                                        item += `<input type="checkbox" id="ck_${disp.id}" >`;
-                                    }
-                                    item += `<span class="lever"></span>
+                if (disp.state) {
+                    item += `<input type="checkbox" checked id="ck_${disp.id}">`;
+                }
+                else {
+                    item += `<input type="checkbox" id="ck_${disp.id}" >`;
+                }
+                item += `<span class="lever"></span>
                                 On</label>
                                 </div>
                             </div>
@@ -220,10 +220,14 @@ window.addEventListener("load", () => {
     var btnListar: HTMLElement = document.getElementById("btnListar");
     btnListar.addEventListener("click", main);
 
-
-    var btnAgregar: HTMLElement = document.getElementById("btnAgregar");
-    btnAgregar.addEventListener("click", main);
-
     var btnLogin = document.getElementById("btnLogin");
     btnLogin.addEventListener("click", main);
+
+    // TODO this should be called after GUARDAR from modal is pressed
+    // var btnAgregar: HTMLElement = document.getElementById("btnAgregar");
+    // btnAgregar.addEventListener("click", main);
+
+    var modalEdit: HTMLElement = document.getElementById("editDevice");
+    M.Modal.init(modalEdit);
+    
 });
