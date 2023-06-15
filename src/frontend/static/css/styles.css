@@ -22,3 +22,8 @@ main {
 .dropdown-content li a.delete-option {
   color: red;
 }
+
+.no-pointer-events {
+  pointer-events: none;
+}
+

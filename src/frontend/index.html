@@ -27,7 +27,8 @@
                         <a class="btn modal-trigger" href="#loginModal">Login</a>
                     </li>
                     <li>
-                        <a href="https://github.com/AgustinBaffo/app-fullstack-base-2023-i08/blob/master/README.md">Help</a>
+                        <a
+                            href="https://github.com/AgustinBaffo/app-fullstack-base-2023-i08/blob/master/README.md">Help</a>
                     </li>
                 </ul>
             </div>
@@ -66,11 +67,14 @@
             <br /><br />
 
             <div class="col">
+                
+                <button class="btn waves-effect waves-light button-view left-align" id="btnToggleListar">
+                    <i class="material-icons left no-pointer-events" id="btnToggleListarIcon">arrow_drop_down</i>
+                    <label class="white-text no-pointer-events" id="btnToggleListarLabel">Listar</label>
+                </button>
+                
                 <div class="row">
-                    <button class="btn waves-effect waves-light button-view left-align" id="btnListar">Listar</button>
-                </div>
-                <div class="row">
-                    <ul class="collection" id="listaDisp">
+                    <ul class="collection" id="listaDisp" style="display: none;">
                     </ul>
                 </div>
                 <div class="row right-align">

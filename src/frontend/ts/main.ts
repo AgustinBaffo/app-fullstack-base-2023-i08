@@ -29,7 +29,7 @@ class Main implements EventListenerObject, HttpResponse {
         var listarCallback = (res: string) => {
             var lista: Array<Device> = JSON.parse(res);
             var ulDisp = document.getElementById("listaDisp");
-            
+
             // Crear html dinamico de la lista de dispositivos.
             ulDisp.innerHTML = "";
             for (var disp of lista) {
@@ -42,7 +42,7 @@ class Main implements EventListenerObject, HttpResponse {
                     item += '<img src="static/images/lightbulb.png" alt = "lightbulb" class="circle" >'
                 } else if (disp.type == 2) {
                     item += '<img src="static/images/airconditionar.png" alt = "airconditionar" class="circle" >'
-                } else if  (disp.type == 3) {
+                } else if (disp.type == 3) {
                     item += '<img src="static/images/window.png" alt = "window" class="circle" >'
                 } else {
                     item += '<img src="static/images/other.png" alt = "other" class="circle" >'
@@ -69,6 +69,9 @@ class Main implements EventListenerObject, HttpResponse {
                 ulDisp.innerHTML += item;
             }
 
+            ulDisp.style.display = ''; 
+
+
             for (var disp of lista) {
                 var rangeState = document.getElementById("rangeState_" + disp.id);
                 rangeState.addEventListener("click", this);
@@ -90,17 +93,44 @@ class Main implements EventListenerObject, HttpResponse {
         this.framework.ejecutarBackEnd("GET", "http://localhost:8000/devices", this, {}, listarCallback);
     }
 
+    hideList() {
+        var ulDisp = document.getElementById("listaDisp");
+        ulDisp.style.display = 'none';  // Ocultar la lista
+        ulDisp.innerHTML = "";          // Borrar contenido html
+    }
+
     handleEvent(event) {
         var elemento = <HTMLInputElement>event.target;
-        if (event.target.id == "btnListar") {
+        if (event.target.id == "btnToggleListar") {
 
+            var btnToggleListarLabel = document.getElementById('btnToggleListarLabel');
+            var btnToggleListarIcon = document.getElementById('btnToggleListarIcon');
+            var listaDisp = document.getElementById('listaDisp');
 
-            this.updateDevicesList();
+            console.log("----------------")
+            console.log("----------------")
+            console.log("----------------")
+            console.log("----------------")
 
-            for (var user of this.users) {
-                //TODO cambiar ESTO por mostrar estos datos separados por "-" 
-                //en un parrafo "etiqueta de tipo <p>"
+            console.log(btnToggleListarIcon);
+            console.log(btnToggleListarLabel);
+
+            // Verificar el estado inicial de la lista y mostrar el botón adecuado
+            if (listaDisp.style.display === 'none') {
+                btnToggleListarLabel.textContent = 'Colapsar';
+                btnToggleListarIcon.textContent = 'arrow_drop_up';
+
+                this.updateDevicesList(); // Mostrar lista
+            } else {
+                btnToggleListarLabel.textContent = 'Listar';
+                btnToggleListarIcon.textContent = 'arrow_drop_down';
+                this.hideList();
             }
+
+            console.log("----------------")
+            console.log("----------------")
+            console.log("----------------")
+            console.log("----------------")
         }
         else if (event.target.id == "confirmEditDevice") {
 
@@ -157,13 +187,9 @@ class Main implements EventListenerObject, HttpResponse {
             var username: string = iUser.value;
             var password: string = iPass.value;
 
-            //T ODO
-            // Buscar usuario iUser en lista de usuarios this.users
-            // Verificar si existe
-            // Ver si matchea la contraseña
 
             if (username.length > 3 && password.length > 3) {
-                //iriamos al servidor a consultar si el usuario y la cotraseña son correctas
+                // Iriamos al servidor a consultar si el usuario y la cotraseña son correctas
                 var parrafo = document.getElementById("parrafo");
                 parrafo.innerHTML = "Espere...";
             } else {
@@ -172,12 +198,12 @@ class Main implements EventListenerObject, HttpResponse {
 
         }
         else if (elemento.id.startsWith("rangeState_")) {
-            
+
             var device: Device = new Device();
             device.id = parseInt(elemento.id.slice(elemento.id.indexOf('_') + 1));
 
             var rangeElement = <HTMLInputElement>document.getElementById(elemento.id);
-            device.state  = parseInt(rangeElement.value,0);
+            device.state = parseInt(rangeElement.value, 0);
 
             console.log("device : " + JSON.stringify(device));
             if (device.id !== null && device.id >= 0 && device.state !== null && device.state >= 0 && device.state <= 100) {
@@ -265,7 +291,7 @@ class Main implements EventListenerObject, HttpResponse {
             console.log("Evento desconocido: " + event.id);
         }
     }
-    
+
     // Resetea el form para actualizar dispositivos.
     clearFormEditDevice() {
         var form = <HTMLFormElement>document.getElementById("deviceForm");
@@ -284,8 +310,8 @@ window.addEventListener("load", () => {
 
     var main: Main = new Main();
 
-    const btnListar: HTMLElement = document.getElementById("btnListar");
-    btnListar.addEventListener("click", main);
+    const btnToggleListar: HTMLElement = document.getElementById("btnToggleListar");
+    btnToggleListar.addEventListener("click", main);
 
     const btnAgregar: HTMLElement = document.getElementById("btnAgregar");
     btnAgregar.addEventListener("click", main);
