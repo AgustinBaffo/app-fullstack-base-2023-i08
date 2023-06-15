@@ -32,17 +32,17 @@ class Main implements EventListenerObject, HttpResponse {
 
             for (var disp of lista) {
                 var item: string = `<li class="collection-item avatar">`;
+                item += `<div id="deviceIcon_${disp.id}" device-type="${disp.type}">`;
                 if (disp.type == 1) {
                     item += '<img src="static/images/lightbulb.png" alt = "" class="circle" >'
                 } else {
                     item += '<img src="static/images/window.png" alt = "" class="circle" >'
                 }
+                item += `</div>`;
 
                 item += `
                 <div class="name"><span class="titulo" id="deviceName_${disp.id}">${disp.name}</span>
                         <p id="deviceDescription_${disp.id}">${disp.description}</p></div>
-
-                        
                             <div class="switch">
                                 <label>Off`;
                 if (disp.state) {
@@ -96,7 +96,6 @@ class Main implements EventListenerObject, HttpResponse {
 
     handleEvent(event) {
         var elemento = <HTMLInputElement>event.target;
-        console.log(elemento)
         if (event.target.id == "btnListar") {
 
             this.updateDevicesList();
@@ -125,25 +124,25 @@ class Main implements EventListenerObject, HttpResponse {
             var confirmEditDeviceCallback = (res: string) => {
                 this.updateDevicesList();
             }
-            
+
             // Verificar si se esta editando o agregando un dispositivo y enviar los datos al backend.
             var editDeviceForm: HTMLElement = document.getElementById("editDeviceFormType");
 
             if (editDeviceForm.classList.contains("edit-device-form")) {
                 var deviceID = parseInt(editDeviceForm.getAttribute("device-id"), 0);
-                if (!deviceID || deviceID <=0) {
+                if (!deviceID || deviceID <= 0) {
                     console.log("Error al procesar el formulario de edicion de dispositivo. ID de dispositivo invalido: " + deviceID);
                     return;
                 }
-                device.id =  deviceID;
-                console.log("confirmEditDevice: updating " + JSON.stringify(device));
+                device.id = deviceID;
+                console.log("confirmEditDevice: actualizando " + JSON.stringify(device));
                 this.framework.ejecutarBackEnd("PUT", "http://localhost:8000/device", this, device, confirmEditDeviceCallback);
 
-            }else if (editDeviceForm.classList.contains("add-device-form")){
-                console.log("confirmEditDevice: adding " + JSON.stringify(device));
+            } else if (editDeviceForm.classList.contains("add-device-form")) {
+                console.log("confirmEditDevice: agregando " + JSON.stringify(device));
                 this.framework.ejecutarBackEnd("POST", "http://localhost:8000/device", this, device, confirmEditDeviceCallback);
 
-            }else{
+            } else {
                 console.log("Error al procesar el formulario de edicion de dispositivo. Acción desconocida.")
             }
 
@@ -181,7 +180,7 @@ class Main implements EventListenerObject, HttpResponse {
                 var cambiarEstadoCallback = (res: string) => {
                     this.updateDevicesList();
                 }
-                
+
                 // TODO deberia ser PUT no POST
                 this.framework.ejecutarBackEnd("POST", "http://localhost:8000/state", this, device, cambiarEstadoCallback);
             }
@@ -210,19 +209,29 @@ class Main implements EventListenerObject, HttpResponse {
             device.id = parseInt(elemento.id.slice(elemento.id.indexOf('_') + 1));
             device.name = document.getElementById("deviceName_" + device.id).innerHTML;;
             device.description = document.getElementById("deviceDescription_" + device.id).innerHTML;
-            device.type = 1; // TODO: get this data from html
+
+            var deviceType = document.getElementById("deviceIcon_" + device.id).getAttribute('device-type');
+            if(deviceType){
+                device.type = parseInt(deviceType, 0);
+            }else{
+                console.log("Error: No se puede obtener el tipo de dispositivo. Usando valor por defecto.");
+                device.type = 0; // Use default
+            }
 
             console.log("Editando dispositivo: " + device.id + " | " + device.name + " | " + device.description + " | " + device.type);
 
             // Actualizar los elementos del form con los valores del dispositivo
-            var name = <HTMLInputElement>document.getElementById("editNameDevice");
-            name.value = device.name;
-            var description = <HTMLInputElement>document.getElementById("editDescriptionDevice");
-            description.value = device.description;
-            var type = <HTMLSelectElement>document.getElementById("editTypeDevice");
-            device.type = device.type; // TODO set index??? type.selectedIndex  or type.options[type.selectedIndex].value);
-            M.updateTextFields();
+            const formName = <HTMLInputElement>document.getElementById("editNameDevice");
+            formName.value = device.name;
+            const formDescription = <HTMLInputElement>document.getElementById("editDescriptionDevice");
+            formDescription.value = device.description;
+            const formType = <HTMLSelectElement>document.getElementById("editTypeDevice");
+            formType.value = device.type.toString();
+            const event = new Event('change', { bubbles: true });
+            formType.dispatchEvent(event);
             
+            M.updateTextFields();
+
             // Cambiar titulo y la clase del form modal.
             var titleElement: HTMLElement = document.getElementById("editDeviceFormTitle");
             titleElement.textContent = "Editar dispositivo";
@@ -260,28 +269,28 @@ class Main implements EventListenerObject, HttpResponse {
 window.addEventListener("load", () => {
 
     var elems = document.querySelectorAll('select');
-    var instances = M.FormSelect.init(elems, {});
+    M.FormSelect.init(elems, {});
     var elemsC = document.querySelectorAll('.datepicker');
-    var instances = M.Datepicker.init(elemsC, { autoClose: true });
+    M.Datepicker.init(elemsC, { autoClose: true });
 
     var main: Main = new Main();
-    
-    var btnListar: HTMLElement = document.getElementById("btnListar");
+
+    const btnListar: HTMLElement = document.getElementById("btnListar");
     btnListar.addEventListener("click", main);
-    
-    var btnAgregar: HTMLElement = document.getElementById("btnAgregar");
+
+    const btnAgregar: HTMLElement = document.getElementById("btnAgregar");
     btnAgregar.addEventListener("click", main);
 
-    var btnLogin = document.getElementById("btnLogin");
+    const btnLogin = document.getElementById("btnLogin");
     btnLogin.addEventListener("click", main);
 
-    var cancelEditDevice: HTMLElement = document.getElementById("cancelEditDevice");
+    const cancelEditDevice: HTMLElement = document.getElementById("cancelEditDevice");
     cancelEditDevice.addEventListener("click", main);
 
-    var confirmEditDevice: HTMLElement = document.getElementById("confirmEditDevice");
+    const confirmEditDevice: HTMLElement = document.getElementById("confirmEditDevice");
     confirmEditDevice.addEventListener("click", main);
 
-    var modalEdit: HTMLElement = document.getElementById("editDeviceForm");
+    const modalEdit: HTMLElement = document.getElementById("editDeviceForm");
     M.Modal.init(modalEdit);
 
 });
