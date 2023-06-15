@@ -61,13 +61,14 @@
                     <button class="btn waves-effect waves-light button-view" id="btnListar">Listar</button>
                 </div>
                 <div class="col s12 m4 l8 xl6 ">
-                    <a class="btn-floating btn-large waves-effect waves-light modal-trigger" href="#editDevice"><i
-                            class="material-icons" id="btnAgregar">add</i></a>
+                    <a class="btn-floating btn-large waves-effect waves-light modal-trigger" href="#editDeviceForm">
+                        <i class="material-icons" id="btnAgregar">add</i>
+                    </a>
                 </div>
             </div>
 
             <!-- Start modal to edit/add devices -->
-            <div id="editDevice" class="modal">
+            <div id="editDeviceForm" class="modal">
                 <div class="modal-content">
                     <h4>Editar dispositivo</h4>
                     <form>
@@ -92,8 +93,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <a href="#!" class="modal-close waves-effect waves-green btn" id="saveEditDevice">Guardar</a>
                     <a href="#!" class="modal-close waves-effect waves-red btn" id="cancelEditDevice">Cancelar</a>
+                    <a href="#!" class="modal-close waves-effect waves-green btn" id="saveEditDevice">Guardar</a>
                 </div>
             </div>
             <!-- End modal -->

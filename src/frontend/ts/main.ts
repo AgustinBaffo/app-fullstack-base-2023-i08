@@ -39,8 +39,8 @@ class Main implements EventListenerObject, HttpResponse {
                 }
 
                 item += `
-                <div class="name"><span class="titulo">${disp.name}</span>
-                        <p>${disp.description}</p></div>
+                <div class="name"><span class="titulo" id="deviceName_${disp.id}">${disp.name}</span>
+                        <p id="deviceDescription_${disp.id}">${disp.description}</p></div>
 
                         
                             <div class="switch">
@@ -61,7 +61,7 @@ class Main implements EventListenerObject, HttpResponse {
                             </a>
 
                         <ul id="dropdown_${disp.id}" class="dropdown-content dropdown-content">
-                            <li><a href="#!" id="editDevice_${disp.id}">Editar</a></li>
+                            <li><a id="editDevice_${disp.id}">Editar</a></li>
                             <li><a href="#!" class="delete-option" id="deleteDevice_${disp.id}">Eliminar</a></li>
                         </ul>`;
 
@@ -88,7 +88,7 @@ class Main implements EventListenerObject, HttpResponse {
 
         this.framework.ejecutarBackEnd("GET", "http://localhost:8000/devices", this, {}, listarCallback);
     }
-    clearFormEditDevice(){
+    clearFormEditDevice() {
         var name = <HTMLInputElement>document.getElementById("editNameDevice");
         name.value = "";
         var description = <HTMLInputElement>document.getElementById("editDescriptionDevice");
@@ -99,8 +99,10 @@ class Main implements EventListenerObject, HttpResponse {
         console.log("value: " + type.value + " | selectedIndex: " + type.selectedIndex);
 
         // TODO fix this reset
-        type.value = "";        
+        type.value = "";
         type.selectedIndex = 0;
+
+        M.updateTextFields();
     }
 
     handleEvent(event) {
@@ -116,16 +118,15 @@ class Main implements EventListenerObject, HttpResponse {
             }
         }
         else if (event.target.id == "saveEditDevice") {
-            
-            console.log("saveEditDevice");
 
             var name = <HTMLInputElement>document.getElementById("editNameDevice");
             var description = <HTMLInputElement>document.getElementById("editDescriptionDevice");
             var type = <HTMLSelectElement>document.getElementById("editTypeDevice");
 
             // TODO: Validar nombres
-            
+
             var device: Device = new Device();
+            device.id = 2
             device.description = description.value;
             device.name = name.value;
             device.state = false;   // TODO use default
@@ -133,22 +134,18 @@ class Main implements EventListenerObject, HttpResponse {
 
             this.clearFormEditDevice();
 
-            var agregarCallback = (res: string) => {
+            var saveEditDeviceCallback = (res: string) => {
                 this.updateDevicesList();
             }
 
-            this.framework.ejecutarBackEnd("POST", "http://localhost:8000/device", this, device, agregarCallback);
+            console.log("saveEditDevice: " + JSON.stringify(device));
+            this.framework.ejecutarBackEnd("PUT", "http://localhost:8000/device", this, device, saveEditDeviceCallback);
+
         }
         else if (event.target.id == "cancelEditDevice") {
-            
-            console.log("cancelEditDevice");
-            
-            // TODO: Clear fields
-            // Obtener html del nombre, descripcion y tipo y reiniciar los valores
+
             this.clearFormEditDevice();
-            
-            
-            
+
         }
         else if (event.target.id == "btnLogin") {
 
@@ -185,24 +182,6 @@ class Main implements EventListenerObject, HttpResponse {
             }
 
         }
-        else if (elemento.id.startsWith("ddOptions_")) {
-
-            var id: number = parseInt(elemento.id.slice(elemento.id.indexOf('_') + 1));
-
-            console.log("option for id: " + id);
-            // if (device.id !== null && device.id >= 0 && device.state !== null) {
-
-            //     var cambiarEstadoCallback = (res: string) => {
-            //         this.updateDevicesList();
-            //     }
-
-            //     this.framework.ejecutarBackEnd("POST", "http://localhost:8000/state", this, device, cambiarEstadoCallback);
-            // }
-            // else {
-            //     alert("Error al cambiar de estado el elemento " + elemento.id + ".");
-            // }
-
-        }
         else if (elemento.id.startsWith("deleteDevice_")) {
 
             var device: Device = new Device();
@@ -219,20 +198,27 @@ class Main implements EventListenerObject, HttpResponse {
         }
         else if (elemento.id.startsWith("editDevice_")) {
 
-            // TODO: Get real data
+            // Obtener datos del dispositivo que se va a editar y crear dispositivo para actualizar
             var device: Device = new Device();
             device.id = parseInt(elemento.id.slice(elemento.id.indexOf('_') + 1));
-            device.name = "nuevo nombre";
-            device.description = "nueva descripcion";
-            device.state = true;
-            device.type = 1;
+            device.name = document.getElementById("deviceName_" + device.id).innerHTML;;
+            device.description = document.getElementById("deviceDescription_" + device.id).innerHTML;
+            device.type = 1; // TODO: get this data from html
 
-            var editarCallback = (res: string) => {
-                this.updateDevicesList();
-            }
+            console.log("Editando dispositivo: " + device.id + " | " + device.name + " | " + device.description + " | " + device.type);
 
-            this.framework.ejecutarBackEnd("PUT", "http://localhost:8000/device", this, device, editarCallback);
+            // Actualizar los elementos del form con los valores del dispositivo
+            var name = <HTMLInputElement>document.getElementById("editNameDevice");
+            name.value = device.name;
+            var description = <HTMLInputElement>document.getElementById("editDescriptionDevice");
+            description.value = device.description;
+            var type = <HTMLSelectElement>document.getElementById("editTypeDevice");
+            device.type = device.type; // TODO set index??? type.selectedIndex  or type.options[type.selectedIndex].value);
+            M.updateTextFields();
 
+            // Obtener form modal y abrirlo
+            var modalInstance = M.Modal.getInstance(document.getElementById('editDeviceForm'));
+            modalInstance.open();
         }
         else {
             console.log("Evento desconocido: " + event.id);
@@ -255,14 +241,13 @@ window.addEventListener("load", () => {
     var btnLogin = document.getElementById("btnLogin");
     btnLogin.addEventListener("click", main);
 
-    // TODO this should be called after GUARDAR from modal is pressed
-    var btnAgregar: HTMLElement = document.getElementById("saveEditDevice");
-    btnAgregar.addEventListener("click", main);
-
     var cancelEditDevice: HTMLElement = document.getElementById("cancelEditDevice");
     cancelEditDevice.addEventListener("click", main);
 
-    var modalEdit: HTMLElement = document.getElementById("editDevice");
+    var saveEditDevice: HTMLElement = document.getElementById("saveEditDevice");
+    saveEditDevice.addEventListener("click", main);
+
+    var modalEdit: HTMLElement = document.getElementById("editDeviceForm");
     M.Modal.init(modalEdit);
-    
+
 });
