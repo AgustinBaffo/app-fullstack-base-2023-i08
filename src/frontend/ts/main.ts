@@ -117,7 +117,7 @@ class Main implements EventListenerObject, HttpResponse {
                 //en un parrafo "etiqueta de tipo <p>"
             }
         }
-        else if (event.target.id == "saveEditDevice") {
+        else if (event.target.id == "confirmEditDevice") {
 
             var name = <HTMLInputElement>document.getElementById("editNameDevice");
             var description = <HTMLInputElement>document.getElementById("editDescriptionDevice");
@@ -126,7 +126,6 @@ class Main implements EventListenerObject, HttpResponse {
             // TODO: Validar nombres
 
             var device: Device = new Device();
-            device.id = 2
             device.description = description.value;
             device.name = name.value;
             device.state = false;   // TODO use default
@@ -134,12 +133,26 @@ class Main implements EventListenerObject, HttpResponse {
 
             this.clearFormEditDevice();
 
-            var saveEditDeviceCallback = (res: string) => {
+            var confirmEditDeviceCallback = (res: string) => {
                 this.updateDevicesList();
             }
+            
+            // Verificar si se esta editando o agregando un dispositivo y enviar los datos al backend.
+            var editDeviceForm: HTMLElement = document.getElementById("editDeviceFormType");
 
-            console.log("saveEditDevice: " + JSON.stringify(device));
-            this.framework.ejecutarBackEnd("PUT", "http://localhost:8000/device", this, device, saveEditDeviceCallback);
+            if (editDeviceForm.classList.contains("edit-device-form")) {
+                device.id = 2 // TODO: obtener el id del dispositivo a editar
+                console.log("confirmEditDevice: updating " + JSON.stringify(device));
+                this.framework.ejecutarBackEnd("PUT", "http://localhost:8000/device", this, device, confirmEditDeviceCallback);
+
+            }else if (editDeviceForm.classList.contains("add-device-form")){
+                console.log("confirmEditDevice: adding " + JSON.stringify(device));
+                this.framework.ejecutarBackEnd("POST", "http://localhost:8000/device", this, device, confirmEditDeviceCallback);
+
+            }else{
+                console.log("Error al procesar el formulario de edicion de dispositivo. Acción desconocida.")
+            }
+
 
         }
         else if (event.target.id == "cancelEditDevice") {
@@ -174,7 +187,8 @@ class Main implements EventListenerObject, HttpResponse {
                 var cambiarEstadoCallback = (res: string) => {
                     this.updateDevicesList();
                 }
-
+                
+                // TODO deberia ser PUT no POST
                 this.framework.ejecutarBackEnd("POST", "http://localhost:8000/state", this, device, cambiarEstadoCallback);
             }
             else {
@@ -193,7 +207,6 @@ class Main implements EventListenerObject, HttpResponse {
             }
 
             this.framework.ejecutarBackEnd("DELETE", "http://localhost:8000/device", this, device, eliminarCallback);
-
 
         }
         else if (elemento.id.startsWith("editDevice_")) {
@@ -215,10 +228,31 @@ class Main implements EventListenerObject, HttpResponse {
             var type = <HTMLSelectElement>document.getElementById("editTypeDevice");
             device.type = device.type; // TODO set index??? type.selectedIndex  or type.options[type.selectedIndex].value);
             M.updateTextFields();
+            
+            // Cambiar titulo y la clase del form modal.
+            var titleElement: HTMLElement = document.getElementById("editDeviceFormTitle");
+            titleElement.textContent = "Editar dispositivo";
+            var editDeviceForm: HTMLElement = document.getElementById("editDeviceFormType");
+            editDeviceForm.className = "edit-device-form";
 
             // Obtener form modal y abrirlo
             var modalInstance = M.Modal.getInstance(document.getElementById('editDeviceForm'));
             modalInstance.open();
+        }
+        else if (event.target.id == "btnAgregar") {
+
+            // Cambiar titulo y la clase del form modal.
+            var titleElement: HTMLElement = document.getElementById("editDeviceFormTitle");
+            titleElement.textContent = "Agregar dispositivo";
+            var editDeviceForm: HTMLElement = document.getElementById("editDeviceFormType");
+            editDeviceForm.className = "add-device-form";
+
+            this.clearFormEditDevice();
+
+            // Obtener form modal y abrirlo
+            var modalInstance = M.Modal.getInstance(document.getElementById('editDeviceForm'));
+            modalInstance.open();
+
         }
         else {
             console.log("Evento desconocido: " + event.id);
@@ -235,8 +269,12 @@ window.addEventListener("load", () => {
     var instances = M.Datepicker.init(elemsC, { autoClose: true });
 
     var main: Main = new Main();
+    
     var btnListar: HTMLElement = document.getElementById("btnListar");
     btnListar.addEventListener("click", main);
+    
+    var btnAgregar: HTMLElement = document.getElementById("btnAgregar");
+    btnAgregar.addEventListener("click", main);
 
     var btnLogin = document.getElementById("btnLogin");
     btnLogin.addEventListener("click", main);
@@ -244,8 +282,8 @@ window.addEventListener("load", () => {
     var cancelEditDevice: HTMLElement = document.getElementById("cancelEditDevice");
     cancelEditDevice.addEventListener("click", main);
 
-    var saveEditDevice: HTMLElement = document.getElementById("saveEditDevice");
-    saveEditDevice.addEventListener("click", main);
+    var confirmEditDevice: HTMLElement = document.getElementById("confirmEditDevice");
+    confirmEditDevice.addEventListener("click", main);
 
     var modalEdit: HTMLElement = document.getElementById("editDeviceForm");
     M.Modal.init(modalEdit);

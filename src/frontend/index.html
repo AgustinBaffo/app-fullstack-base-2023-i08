@@ -61,7 +61,7 @@
                     <button class="btn waves-effect waves-light button-view" id="btnListar">Listar</button>
                 </div>
                 <div class="col s12 m4 l8 xl6 ">
-                    <a class="btn-floating btn-large waves-effect waves-light modal-trigger" href="#editDeviceForm">
+                    <a class="btn-floating btn-large waves-effect waves-light">
                         <i class="material-icons" id="btnAgregar">add</i>
                     </a>
                 </div>
@@ -70,31 +70,35 @@
             <!-- Start modal to edit/add devices -->
             <div id="editDeviceForm" class="modal">
                 <div class="modal-content">
-                    <h4>Editar dispositivo</h4>
-                    <form>
-                        <div class="input-field">
-                            <input id="editNameDevice" type="text" class="validate">
-                            <label for="editNameDevice">Nombre</label>
-                        </div>
-                        <div class="input-field">
-                            <input id="editDescriptionDevice" type="text" class="validate">
-                            <label for="editDescriptionDevice">Descripción</label>
-                        </div>
-                        <div class="input-field">
-                            <select id="editTypeDevice">
-                                <option value="" disabled selected>Seleccione un tipo</option>
-                                <option value="1">Lámpara</option>
-                                <option value="2">Ventilador</option>
-                                <option value="3">Persiana</option>
-                                <option value="0">Otro</option>
-                            </select>
-                            <label>Tipo</label>
-                        </div>
-                    </form>
+                    <div id="editDeviceFormType" class="edit-device-form">
+                        <h4 id="editDeviceFormTitle">Editar dispositivo</h4>
+                        <br />
+                        <form>
+                            <div class="input-field">
+                                <input id="editNameDevice" type="text" class="validate">
+                                <label for="editNameDevice">Nombre</label>
+                            </div>
+                            <div class="input-field">
+                                <input id="editDescriptionDevice" type="text" class="validate">
+                                <label for="editDescriptionDevice">Descripción</label>
+                            </div>
+                            <div class="input-field">
+                                <select id="editTypeDevice">
+                                    <option value="" disabled selected>Seleccione un tipo</option>
+                                    <option value="1">Lámpara</option>
+                                    <option value="2">Ventilador</option>
+                                    <option value="3">Persiana</option>
+                                    <option value="0">Otro</option>
+                                </select>
+                                <label>Tipo</label>
+                            </div>
+                        </form>
+                    </div>
                 </div>
+
                 <div class="modal-footer">
                     <a href="#!" class="modal-close waves-effect waves-red btn" id="cancelEditDevice">Cancelar</a>
-                    <a href="#!" class="modal-close waves-effect waves-green btn" id="saveEditDevice">Guardar</a>
+                    <a href="#!" class="modal-close waves-effect waves-green btn" id="confirmEditDevice">Confirmar</a>
                 </div>
             </div>
             <!-- End modal -->
