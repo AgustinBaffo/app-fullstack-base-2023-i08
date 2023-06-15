@@ -89,19 +89,8 @@ class Main implements EventListenerObject, HttpResponse {
         this.framework.ejecutarBackEnd("GET", "http://localhost:8000/devices", this, {}, listarCallback);
     }
     clearFormEditDevice() {
-        var name = <HTMLInputElement>document.getElementById("editNameDevice");
-        name.value = "";
-        var description = <HTMLInputElement>document.getElementById("editDescriptionDevice");
-        description.value = "";
-        var type = <HTMLSelectElement>document.getElementById("editTypeDevice");
-
-        console.log(type);
-        console.log("value: " + type.value + " | selectedIndex: " + type.selectedIndex);
-
-        // TODO fix this reset
-        type.value = "";
-        type.selectedIndex = 0;
-
+        var form = <HTMLFormElement>document.getElementById("deviceForm");
+        form.reset();
         M.updateTextFields();
     }
 
