@@ -121,7 +121,6 @@ class Main implements EventListenerObject, HttpResponse {
             var device: Device = new Device();
             device.description = description.value;
             device.name = name.value;
-            device.state = false;   // TODO use default
             device.type = parseInt(type.value, 0);
 
             this.clearFormEditDevice();
@@ -144,6 +143,7 @@ class Main implements EventListenerObject, HttpResponse {
                 this.framework.ejecutarBackEnd("PUT", "http://localhost:8000/device", this, device, confirmEditDeviceCallback);
 
             } else if (editDeviceForm.classList.contains("add-device-form")) {
+                device.state = false;   // Por defecto esta apagado.
                 console.log("confirmEditDevice: agregando " + JSON.stringify(device));
                 this.framework.ejecutarBackEnd("POST", "http://localhost:8000/device", this, device, confirmEditDeviceCallback);
 
