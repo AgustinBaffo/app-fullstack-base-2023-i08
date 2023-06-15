@@ -69,7 +69,7 @@ class Main implements EventListenerObject, HttpResponse {
                 ulDisp.innerHTML += item;
             }
 
-            ulDisp.style.display = ''; 
+            ulDisp.style.display = '';
 
 
             for (var disp of lista) {
@@ -107,14 +107,6 @@ class Main implements EventListenerObject, HttpResponse {
             var btnToggleListarIcon = document.getElementById('btnToggleListarIcon');
             var listaDisp = document.getElementById('listaDisp');
 
-            console.log("----------------")
-            console.log("----------------")
-            console.log("----------------")
-            console.log("----------------")
-
-            console.log(btnToggleListarIcon);
-            console.log(btnToggleListarLabel);
-
             // Verificar el estado inicial de la lista y mostrar el botón adecuado
             if (listaDisp.style.display === 'none') {
                 btnToggleListarLabel.textContent = 'Colapsar';
@@ -126,11 +118,6 @@ class Main implements EventListenerObject, HttpResponse {
                 btnToggleListarIcon.textContent = 'arrow_drop_down';
                 this.hideList();
             }
-
-            console.log("----------------")
-            console.log("----------------")
-            console.log("----------------")
-            console.log("----------------")
         }
         else if (event.target.id == "confirmEditDevice") {
 
@@ -330,5 +317,8 @@ window.addEventListener("load", () => {
 
     const modalLogin: HTMLElement = document.getElementById("loginModal");
     M.Modal.init(modalLogin);
+
+    var tooltips = document.querySelectorAll('.tooltipped');
+    M.Tooltip.init(tooltips, { enterDelay: 200 });
 
 });
