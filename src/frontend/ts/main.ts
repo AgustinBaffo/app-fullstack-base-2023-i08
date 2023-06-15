@@ -302,4 +302,7 @@ window.addEventListener("load", () => {
     const modalEdit: HTMLElement = document.getElementById("editDeviceForm");
     M.Modal.init(modalEdit);
 
+    const modalLogin: HTMLElement = document.getElementById("loginModal");
+    M.Modal.init(modalLogin);
+
 });

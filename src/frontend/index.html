@@ -22,9 +22,12 @@
         <nav style="background-color:#124580">
             <div class="nav-wrapper">
                 <a href="#!" class="brand-logo left" style="margin-left: 15px;">Smart Home</a>
-                <ul id="nav-mobile" class="right" style="margin-right: 15px;">
-                    <li><a
-                            href="https://github.com/AgustinBaffo/app-fullstack-base-2023-i08/blob/master/README.md">Help</a>
+                <ul id="nav-mobile" class="right">
+                    <li>
+                        <a class="btn modal-trigger" href="#loginModal">Login</a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/AgustinBaffo/app-fullstack-base-2023-i08/blob/master/README.md">Help</a>
                     </li>
                 </ul>
             </div>
@@ -33,20 +36,31 @@
         <div class="container">
 
             <h3>Smart Home Web Client!</h3>
-            <div class="row">
-                <div class="input-field col s12 xl6">
-                    <i class="material-icons prefix " color="secondary">accessibility</i>
-                    <label>Usuario</label>
-                    <input type="text" placeholder="jperez" id="iUser">
+
+            <!-- Start modal for login -->
+            <div id="loginModal" class="modal">
+                <div class="modal-content">
+                    <!-- Contenido del modal de inicio de sesión -->
+                    <h4>Inicio de sesión</h4>
+                    <div class="row">
+                        <div class="input-field col s12 xl6">
+                            <i class="material-icons prefix">accessibility</i>
+                            <label for="iUser">Usuario</label>
+                            <input type="text" placeholder="jperez" id="iUser">
+                        </div>
+                        <div class="input-field col s12 xl6">
+                            <i class="material-icons prefix">lock</i>
+                            <label for="iPass">Contraseña</label>
+                            <input type="password" id="iPass">
+                        </div>
+                    </div>
                 </div>
-                <div class="input-field col s12 xl6">
-                    <i class="material-icons prefix">lock</i>
-                    <label for="iPass">Contraseña</label>
-                    <input type="password" id="iPass">
+                <div class="modal-footer">
+                    <a href="#!" class="modal-close waves-effect waves-red btn">Cancelar</a>
+                    <a href="#!" class="modal-close waves-effect waves-green btn" id="btnLogin">Login</a>
                 </div>
             </div>
-
-            <input type="button" class="btn" id="btnLogin" value="Login">
+            <!-- End modal -->
 
 
             <br /><br />
