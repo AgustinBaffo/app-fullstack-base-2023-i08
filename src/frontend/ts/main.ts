@@ -5,19 +5,20 @@ class Main implements EventListenerObject, HttpResponse {
     framework: Framework = new Framework();
 
     constructor() {
-        var usr1 = new Usuario("mramos", "Matias");
-        var usr2 = new Usuario("jlopez", "Juan");
+
+        // TODO: Crear usuarios de manera dinamica y almacenarlos en una base de datos.
+        var usr1 = new Usuario("user", "user");
+        var usr2 = new Usuario("admin", "admin");
 
         this.users.push(usr1);
         this.users.push(usr2);
-
-        var obj = { "nombre": "Matias", "edad": 35, "masculino": true };
     }
 
     manejarRespuesta(res: string, callback: (res: string) => void) {
 
         console.log("Respuesta del servidor: " + res);
-        // Invocar el callback personalizado si existe. Si no existe, solo publico la respuesta.
+
+        // Invocar el callback personalizado si existe. Si no existe, solo publicar la respuesta.
         if (callback) {
             callback(res);
         }
@@ -28,8 +29,9 @@ class Main implements EventListenerObject, HttpResponse {
         var listarCallback = (res: string) => {
             var lista: Array<Device> = JSON.parse(res);
             var ulDisp = document.getElementById("listaDisp");
+            
+            // Crear html dinamico de la lista de dispositivos.
             ulDisp.innerHTML = "";
-
             for (var disp of lista) {
 
                 console.log("Dispositivo: " + JSON.stringify(disp));
@@ -87,15 +89,11 @@ class Main implements EventListenerObject, HttpResponse {
 
         this.framework.ejecutarBackEnd("GET", "http://localhost:8000/devices", this, {}, listarCallback);
     }
-    clearFormEditDevice() {
-        var form = <HTMLFormElement>document.getElementById("deviceForm");
-        form.reset();
-        M.updateTextFields();
-    }
 
     handleEvent(event) {
         var elemento = <HTMLInputElement>event.target;
         if (event.target.id == "btnListar") {
+
 
             this.updateDevicesList();
 
@@ -158,6 +156,11 @@ class Main implements EventListenerObject, HttpResponse {
             var iPass = <HTMLInputElement>document.getElementById("iPass");
             var username: string = iUser.value;
             var password: string = iPass.value;
+
+            //T ODO
+            // Buscar usuario iUser en lista de usuarios this.users
+            // Verificar si existe
+            // Ver si matchea la contraseña
 
             if (username.length > 3 && password.length > 3) {
                 //iriamos al servidor a consultar si el usuario y la cotraseña son correctas
@@ -261,6 +264,13 @@ class Main implements EventListenerObject, HttpResponse {
         else {
             console.log("Evento desconocido: " + event.id);
         }
+    }
+    
+    // Resetea el form para actualizar dispositivos.
+    clearFormEditDevice() {
+        var form = <HTMLFormElement>document.getElementById("deviceForm");
+        form.reset();
+        M.updateTextFields();
     }
 }
 
