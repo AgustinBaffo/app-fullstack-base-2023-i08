@@ -31,10 +31,11 @@ class Main implements EventListenerObject, HttpResponse {
             ulDisp.innerHTML = "";
 
             for (var disp of lista) {
-                console.log("Dispositivo: " + JSON.stringify(disp));
-                var item: string = `<li class="collection-item avatar">
-                    <div id="deviceIcon_${disp.id}" device-type="${disp.type}">`;
 
+                console.log("Dispositivo: " + JSON.stringify(disp));
+
+                var item: string = `<li class="collection-item avatar">
+                <div id="deviceIcon_${disp.id}" device-type="${disp.type}">`;
                 if (disp.type == 1) {
                     item += '<img src="static/images/lightbulb.png" alt = "lightbulb" class="circle" >'
                 } else if (disp.type == 2) {
@@ -46,36 +47,29 @@ class Main implements EventListenerObject, HttpResponse {
                 }
 
                 item += `</div>
-                <div class="name"><span class="titulo" id="deviceName_${disp.id}">${disp.name}</span>
-                        <p id="deviceDescription_${disp.id}">${disp.description}</p></div>
-                            <div class="switch">
-                                <label>Off`;
-                if (disp.state) {
-                    item += `<input type="checkbox" checked id="ck_${disp.id}">`;
-                }
-                else {
-                    item += `<input type="checkbox" id="ck_${disp.id}" >`;
-                }
-                item += `<span class="lever"></span>
-                                On</label>
-                                </div>
-                            </div>
-                            
-                            <a href="#!" class="secondary-content dropdown-trigger" data-target="dropdown_${disp.id}">
-                                <i class="material-icons">more_vert</i>
-                            </a>
+                <div class="name">
+                    <span class="titulo" id="deviceName_${disp.id}">${disp.name}</span>
+                    <p id="deviceDescription_${disp.id}">${disp.description}</p></div>
+                    <div class="range">
+                        <input type="range" min="0" max="100" value="${disp.state}" id="rangeState_${disp.id}">
+                    </div>
+                </div>
+                    
+                <a href="#!" class="secondary-content dropdown-trigger" data-target="dropdown_${disp.id}">
+                    <i class="material-icons">more_vert</i>
+                </a>
 
-                        <ul id="dropdown_${disp.id}" class="dropdown-content dropdown-content">
-                            <li><a id="editDevice_${disp.id}">Editar</a></li>
-                            <li><a href="#!" class="delete-option" id="deleteDevice_${disp.id}">Eliminar</a></li>
-                        </ul>`;
+                <ul id="dropdown_${disp.id}" class="dropdown-content dropdown-content">
+                    <li><a id="editDevice_${disp.id}">Editar</a></li>
+                    <li><a href="#!" class="delete-option" id="deleteDevice_${disp.id}">Eliminar</a></li>
+                </ul>`;
 
                 ulDisp.innerHTML += item;
             }
 
             for (var disp of lista) {
-                var checkPrender = document.getElementById("ck_" + disp.id);
-                checkPrender.addEventListener("click", this);
+                var rangeState = document.getElementById("rangeState_" + disp.id);
+                rangeState.addEventListener("click", this);
 
                 var editDevice = document.getElementById("editDevice_" + disp.id);
                 editDevice.addEventListener("click", this);
@@ -143,7 +137,7 @@ class Main implements EventListenerObject, HttpResponse {
                 this.framework.ejecutarBackEnd("PUT", "http://localhost:8000/device", this, device, confirmEditDeviceCallback);
 
             } else if (editDeviceForm.classList.contains("add-device-form")) {
-                device.state = false;   // Por defecto esta apagado.
+                device.state = 0;   // Por defecto esta apagado.
                 console.log("confirmEditDevice: agregando " + JSON.stringify(device));
                 this.framework.ejecutarBackEnd("POST", "http://localhost:8000/device", this, device, confirmEditDeviceCallback);
 
@@ -174,24 +168,25 @@ class Main implements EventListenerObject, HttpResponse {
             }
 
         }
-        else if (elemento.id.startsWith("ck_")) {
-
+        else if (elemento.id.startsWith("rangeState_")) {
+            
             var device: Device = new Device();
             device.id = parseInt(elemento.id.slice(elemento.id.indexOf('_') + 1));
-            device.state = elemento.checked;
 
-            if (device.id !== null && device.id >= 0 && device.state !== null) {
+            var rangeElement = <HTMLInputElement>document.getElementById(elemento.id);
+            device.state  = parseInt(rangeElement.value,0);
+
+            console.log("device : " + JSON.stringify(device));
+            if (device.id !== null && device.id >= 0 && device.state !== null && device.state >= 0 && device.state <= 100) {
 
                 var cambiarEstadoCallback = (res: string) => {
                     this.updateDevicesList();
                 }
-
                 this.framework.ejecutarBackEnd("PUT", "http://localhost:8000/state", this, device, cambiarEstadoCallback);
             }
             else {
-                alert("Error al cambiar de estado el elemento " + elemento.id + ".");
+                console.log("Error al cambiar de estado el elemento " + elemento.id + ".");
             }
-
         }
         else if (elemento.id.startsWith("deleteDevice_")) {
 

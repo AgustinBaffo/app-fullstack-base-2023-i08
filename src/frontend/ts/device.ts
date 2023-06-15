@@ -2,7 +2,7 @@ class Device {
   public id: number;
   public description: string;
   public name: string;
-  public state: boolean;
+  public state: number;
   public type: number;
 }
 

@@ -64,10 +64,10 @@ app.delete('/device/', function (req, res) {
 });
 
 app.put('/device/', function (req, res) {
-    console.log("editar dispositivo = " + req.body.id + " " + req.body.name + " " + req.body.description + " " + req.body.type + " " + req.body.state);
+    console.log("editar dispositivo = " + req.body.id + " " + req.body.name + " " + req.body.description + " " + req.body.type);
 
     //TODO: Validar datos.
-    utils.query("update Devices set name = '" + req.body.name + "', description = '" + req.body.description + "', type = " + req.body.type + ", state = " + req.body.state + " where id = " + req.body.id, function (err, rsp, fields) {
+    utils.query("update Devices set name = '" + req.body.name + "', description = '" + req.body.description + "', type = " + req.body.type + " where id = " + req.body.id, function (err, rsp, fields) {
         if (err != null) {
             var msg = "Error al actualizar los datos." + err;
             console.log(msg);
