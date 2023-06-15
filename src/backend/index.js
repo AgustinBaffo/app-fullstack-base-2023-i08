@@ -82,7 +82,7 @@ app.put('/device/', function (req, res) {
 });
 
 
-app.post('/state/', function (req, res) {
+app.put('/state/', function (req, res) {
     //TODO: validar datos.
     utils.query("update Devices set state = " + req.body.state + " where id = " + req.body.id, function (err, rsp, fields) {
         if (err != null) {
@@ -97,8 +97,6 @@ app.post('/state/', function (req, res) {
         }
     });
 });
-
-
 
 
 app.listen(PORT, function (req, res) {

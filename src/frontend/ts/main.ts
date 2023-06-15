@@ -186,8 +186,7 @@ class Main implements EventListenerObject, HttpResponse {
                     this.updateDevicesList();
                 }
 
-                // TODO deberia ser PUT no POST
-                this.framework.ejecutarBackEnd("POST", "http://localhost:8000/state", this, device, cambiarEstadoCallback);
+                this.framework.ejecutarBackEnd("PUT", "http://localhost:8000/state", this, device, cambiarEstadoCallback);
             }
             else {
                 alert("Error al cambiar de estado el elemento " + elemento.id + ".");
