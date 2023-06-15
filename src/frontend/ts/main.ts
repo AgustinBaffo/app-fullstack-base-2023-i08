@@ -31,16 +31,21 @@ class Main implements EventListenerObject, HttpResponse {
             ulDisp.innerHTML = "";
 
             for (var disp of lista) {
-                var item: string = `<li class="collection-item avatar">`;
-                item += `<div id="deviceIcon_${disp.id}" device-type="${disp.type}">`;
-                if (disp.type == 1) {
-                    item += '<img src="static/images/lightbulb.png" alt = "" class="circle" >'
-                } else {
-                    item += '<img src="static/images/window.png" alt = "" class="circle" >'
-                }
-                item += `</div>`;
+                console.log("Dispositivo: " + JSON.stringify(disp));
+                var item: string = `<li class="collection-item avatar">
+                    <div id="deviceIcon_${disp.id}" device-type="${disp.type}">`;
 
-                item += `
+                if (disp.type == 1) {
+                    item += '<img src="static/images/lightbulb.png" alt = "lightbulb" class="circle" >'
+                } else if (disp.type == 2) {
+                    item += '<img src="static/images/airconditionar.png" alt = "airconditionar" class="circle" >'
+                } else if  (disp.type == 3) {
+                    item += '<img src="static/images/window.png" alt = "window" class="circle" >'
+                } else {
+                    item += '<img src="static/images/other.png" alt = "other" class="circle" >'
+                }
+
+                item += `</div>
                 <div class="name"><span class="titulo" id="deviceName_${disp.id}">${disp.name}</span>
                         <p id="deviceDescription_${disp.id}">${disp.description}</p></div>
                             <div class="switch">
@@ -211,9 +216,9 @@ class Main implements EventListenerObject, HttpResponse {
             device.description = document.getElementById("deviceDescription_" + device.id).innerHTML;
 
             var deviceType = document.getElementById("deviceIcon_" + device.id).getAttribute('device-type');
-            if(deviceType){
+            if (deviceType) {
                 device.type = parseInt(deviceType, 0);
-            }else{
+            } else {
                 console.log("Error: No se puede obtener el tipo de dispositivo. Usando valor por defecto.");
                 device.type = 0; // Use default
             }
@@ -229,7 +234,7 @@ class Main implements EventListenerObject, HttpResponse {
             formType.value = device.type.toString();
             const event = new Event('change', { bubbles: true });
             formType.dispatchEvent(event);
-            
+
             M.updateTextFields();
 
             // Cambiar titulo y la clase del form modal.
