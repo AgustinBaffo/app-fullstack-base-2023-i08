@@ -2,20 +2,18 @@
     <img src="doc/gotoiot-logo.png" alt="logo" title="Goto IoT" align="right" width="60" height="60" />
 </a>
 
-Web App Full Stack Base
+Web App Full Stack
 =======================
 
-*Ayudaría mucho si apoyaras este proyecto con una ⭐ en Github!*
+Este proyecto se desarrllo como trabajo final de la materia Desarrollo de Aplicaciones Web, en el marco de la carrera de [Especialización en IoT](https://lse.posgrados.fi.uba.ar/posgrados/especializaciones/internet-de-las-cosas) de la Universidad de Buenos Aires. Para el desarrollo, se tomo como base el respositorio porporcionado por la cátedra: https://github.com/mramos88/app-fullstack-base-2023-i08. 
 
-Este proyecto es una aplicación web fullstack que se ejecuta sobre el ecosistema `Docker`. Está compuesta por un compilador de `TypeScript` que te permite utilizar este superset de JavaScript para poder programar un `cliente web`. También tiene un servicio en `NodeJS` que te permite ejecutar código en backend y al mismo tiempo disponibilizar el código del cliente web para interactar con el servicio. Además tiene una `base de datos` MySQL que puede interactuar con el backend para guardar y consultar datos, y de manera adicional trae un `administrador` de base de datos para poder administrar la base en caso que lo necesites.
+El proyecto consiste en una aplicación web fullstack que se ejecuta sobre el ecosistema `Docker`. Está compuesta por un compilador de `TypeScript` que te permite utilizar este superset de JavaScript para poder programar un `cliente web`. También tiene un servicio en `NodeJS` que te permite ejecutar código en backend y al mismo tiempo disponibilizar el código del cliente web para interactar con el servicio. Además tiene una `base de datos` MySQL que puede interactuar con el backend para guardar y consultar datos, y de manera adicional trae un `administrador` de base de datos para poder administrar la base en caso que lo necesites. Ademas, la aplicación IoT base se encarga de crear una tabla llamada `Devices` en la base de datos.
 
-La aplicación IoT de base que viene con este proyecto se encarga de crear una tabla llamada `Devices` en la base de datos, y la idea es que vos puedas desarrollar el código de backend y frontend que te permita controlar desde el navegador el estado de los devices de un hogar inteligente - *como pueden ser luces, TVs, ventiladores, persianas, enchufes y otros* - y almacenar los estados de cada uno en la base de datos. 
+En el transcurso de este proyecto se desarrolló el código de backend y front end que hace uso de esa base de datos y permite visualizar y editar los datos desde el navegador web. La aplicacion permite editar el estado, asi como también crear, eliminar y editar los dispositivos de un hogar inteligente - *como pueden ser luces, TVs, ventiladores, persianas, enchufes y otros*. 
 
-Realizando estas tareas vas a a tener una aplicación fullstack IoT del mundo real que utiliza tecnologías actuales en la que un backend es capaz de interactuar con una DB para cumplir con las peticiones de control que se le mandan desde el cliente web.
+En la siguiente imagen se muestra una captura de pantalla de la página principal de la aplicacion:
 
-En esta imagen podés ver una posible implementación del cliente web que controla los artefactos del hogar.
-
-![architecture](doc/webapp-example-1.png)
+![architecture](doc/viewhome.png)
 
 ## Comenzando 🚀
 
@@ -38,7 +36,7 @@ Continua con la descarga del código cuando tengas las dependencias instaladas y
 Para descargar el código, lo más conveniente es que realices un `fork` de este proyecto a tu cuenta personal haciendo click en [este link](https://github.com/gotoiot/app-fullstack-base/fork). Una vez que ya tengas el fork a tu cuenta, descargalo con este comando (acordate de poner tu usuario en el link):
 
 ```
-git clone https://github.com/USER/app-fullstack-base.git
+git clone https://github.com/AgustinBaffo/app-fullstack-base-2023-i08
 ```
 
 > En caso que no tengas una cuenta en Github podes clonar directamente este repo.
@@ -213,28 +211,13 @@ En esta sección podés ver las tecnologías más importantes utilizadas.
 
 </details>
 
-## Contribuir 🖇️
-
-Si estás interesado en el proyecto y te gustaría sumar fuerzas para que siga creciendo y mejorando, podés abrir un hilo de discusión para charlar tus propuestas en [este link](https://github.com/gotoiot/app-fullstack-base/issues/new). Así mismo podés leer el archivo [Contribuir.md](https://github.com/gotoiot/gotoiot-doc/wiki/Contribuir) de nuestra Wiki donde están bien explicados los pasos para que puedas enviarnos pull requests.
-
-## Sobre Goto IoT 📖
-
-Goto IoT es una plataforma que publica material y proyectos de código abierto bien documentados junto a una comunidad libre que colabora y promueve el conocimiento sobre IoT entre sus miembros. Acá podés ver los links más importantes:
-
-* **[Sitio web](https://www.gotoiot.com/):** Donde se publican los artículos y proyectos sobre IoT. 
-* **[Github de Goto IoT:](https://github.com/gotoiot)** Donde están alojados los proyectos para descargar y utilizar. 
-* **[Comunidad de Goto IoT:](https://groups.google.com/g/gotoiot)** Donde los miembros de la comunidad intercambian información e ideas, realizan consultas, solucionan problemas y comparten novedades.
-* **[Twitter de Goto IoT:](https://twitter.com/gotoiot)** Donde se publican las novedades del sitio y temas relacionados con IoT.
-* **[Wiki de Goto IoT:](https://github.com/gotoiot/doc/wiki)** Donde hay información de desarrollo complementaria para ampliar el contexto.
-
 ## Muestas de agradecimiento 🎁
 
 Si te gustó este proyecto y quisieras apoyarlo, cualquiera de estas acciones estaría más que bien para nosotros:
 
-* Apoyar este proyecto con una ⭐ en Github para llegar a más personas.
-* Sumarte a [nuestra comunidad](https://groups.google.com/g/gotoiot) abierta y dejar un feedback sobre qué te pareció el proyecto.
-* [Seguirnos en twitter](https://github.com/gotoiot/doc/wiki) y dejar algún comentario o like.
-* Compartir este proyecto con otras personas.
+* Apoyar el [proyecto original](https://github.com/mramos88/app-fullstack-base-2023-i08) con una ⭐ en Github para llegar a más personas.
+* Sumarte a [la comunidad](https://groups.google.com/g/gotoiot) abierta y dejar un feedback sobre qué te pareció el proyecto.
+* [Seguirlos en twitter](https://github.com/gotoiot/doc/wiki) y dejar algún comentario o like.
 
 ## Autores 👥
 
