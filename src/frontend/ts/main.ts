@@ -5,11 +5,9 @@ class Main implements EventListenerObject, HttpResponse {
     framework: Framework = new Framework();
 
     constructor() {
-
         // TODO: Crear usuarios de manera dinamica y almacenarlos en una base de datos.
         var usr1 = new Usuario("user", "user");
         var usr2 = new Usuario("admin", "admin");
-
         this.users.push(usr1);
         this.users.push(usr2);
     }
@@ -18,7 +16,7 @@ class Main implements EventListenerObject, HttpResponse {
 
         console.log("Respuesta del servidor: " + res);
 
-        // Invocar el callback personalizado si existe. Si no existe, solo publicar la respuesta.
+        // Invocar el custom callback si existe. Si no existe, solo mostrar la respuesta en consola.
         if (callback) {
             callback(res);
         } else {
@@ -28,6 +26,7 @@ class Main implements EventListenerObject, HttpResponse {
 
     updateDevicesList() {
 
+        // Crear callback para listar los dispositivos.
         var listarCallback = (res: string) => {
             var lista: Array<Device> = JSON.parse(res);
             var ulDisp = document.getElementById("listaDisp");
@@ -71,6 +70,7 @@ class Main implements EventListenerObject, HttpResponse {
                 ulDisp.innerHTML += item;
             }
 
+            // Inicializar los elementos agregados.
             for (var disp of lista) {
                 var rangeState = document.getElementById("rangeState_" + disp.id);
                 rangeState.addEventListener("click", this);
@@ -89,15 +89,20 @@ class Main implements EventListenerObject, HttpResponse {
             });
         };
 
+        // Enviar request al servidor.
         this.framework.ejecutarBackEnd("GET", "http://localhost:8000/devices", this, {}, listarCallback);
     }
 
     handleEvent(event) {
         var elemento = <HTMLInputElement>event.target;
+
         if (event.target.id == "btnToggleListar") {
+            // Mostrar u ocultar la lista de dispositivos.
             this.toggleList();
         }
+
         else if (event.target.id == "confirmEditDevice") {
+            // Agregar o editar un dispositivo desde el formulario.
 
             // Recuperar datos del form.
             var name = <HTMLInputElement>document.getElementById("editNameDevice");
@@ -141,7 +146,7 @@ class Main implements EventListenerObject, HttpResponse {
                     console.log("Error al procesar el formulario de edicion de dispositivo. ID de dispositivo invalido: " + deviceID);
                     return;
                 }
-                
+
                 device.id = deviceID;
                 console.log("confirmEditDevice: actualizando " + JSON.stringify(device));
                 this.framework.ejecutarBackEnd("PUT", "http://localhost:8000/device", this, device, confirmEditDeviceCallback);
@@ -156,33 +161,14 @@ class Main implements EventListenerObject, HttpResponse {
                 console.log("Error al procesar el formulario de edicion de dispositivo. Acción desconocida.")
             }
         }
-        else if (event.target.id == "cancelEditDevice") {
-            this.clearFormEditDevice();  // Borrar datos del form para la proxima vez que se vuelva a abrir.
-        }
-        else if (event.target.id == "btnLogin") {
-            var iUser = <HTMLInputElement>document.getElementById("iUser");
-            var iPass = <HTMLInputElement>document.getElementById("iPass");
-            var username: string = iUser.value;
-            var password: string = iPass.value;
 
-            if (username.length < 4) {
-                alert("El nombre de usuario es invalido.");
-                iPass.value = "";
-            }
-            else if (password.length < 4) {
-                alert("Contraseña invalida.");
-                iPass.value = "";
-            }
-            else {
-                // TODO: Iriamos al servidor a consultar si el usuario y la cotraseña son correctas
-                alert("Gracias por intentar logearse!\nEsta función llegará pronto a Smart Home Web Client!");
-                this.clearFormLogin();
-            }
+        else if (event.target.id == "cancelEditDevice") {
+            // Borrar datos del form para la proxima vez que se vuelva a abrir.
+            this.clearFormEditDevice();
         }
-        else if (event.target.id == "btnCancelLogin") {
-            this.clearFormLogin();
-        }
+
         else if (elemento.id.startsWith("rangeState_")) {
+            // Editar el estado de un dispositivo.
 
             var device: Device = new Device();
             device.id = parseInt(elemento.id.slice(elemento.id.indexOf('_') + 1));
@@ -191,6 +177,8 @@ class Main implements EventListenerObject, HttpResponse {
             device.state = parseInt(rangeElement.value, 0);
 
             console.log("device : " + JSON.stringify(device));
+            
+            // Validar datos y enviar al servidor.
             if (device.id !== null && device.id >= 0 && device.state !== null && device.state >= 0 && device.state <= 100) {
 
                 var cambiarEstadoCallback = (res: string) => {
@@ -202,7 +190,9 @@ class Main implements EventListenerObject, HttpResponse {
                 console.log("Error al cambiar de estado el elemento " + elemento.id + ".");
             }
         }
+
         else if (elemento.id.startsWith("deleteDevice_")) {
+            // Boton del dropdown para eliminar un dispositivo de la lista.
 
             var device: Device = new Device();
             device.id = parseInt(elemento.id.slice(elemento.id.indexOf('_') + 1));;
@@ -213,9 +203,10 @@ class Main implements EventListenerObject, HttpResponse {
             }
 
             this.framework.ejecutarBackEnd("DELETE", "http://localhost:8000/device", this, device, eliminarCallback);
-
         }
+
         else if (elemento.id.startsWith("editDevice_")) {
+            // Boton del dropdown para editar dispositivo.
 
             // Obtener datos del dispositivo que se va a editar y crear dispositivo para actualizar
             var device: Device = new Device();
@@ -256,7 +247,9 @@ class Main implements EventListenerObject, HttpResponse {
             var modalInstance = M.Modal.getInstance(document.getElementById('editDeviceForm'));
             modalInstance.open();
         }
+
         else if (event.target.id == "btnAgregar") {
+            // Agregar un nuevo dispositivo.
 
             // Cambiar titulo y la clase del form modal.
             var titleElement: HTMLElement = document.getElementById("editDeviceFormTitle");
@@ -272,6 +265,35 @@ class Main implements EventListenerObject, HttpResponse {
             modalInstance.open();
 
         }
+
+        else if (event.target.id == "btnLogin") {
+            // Boton login desde el form de login.
+
+            var iUser = <HTMLInputElement>document.getElementById("iUser");
+            var iPass = <HTMLInputElement>document.getElementById("iPass");
+            var username: string = iUser.value;
+            var password: string = iPass.value;
+
+            if (username.length < 4) {
+                alert("El nombre de usuario es invalido.");
+                iPass.value = "";
+            }
+            else if (password.length < 4) {
+                alert("Contraseña invalida.");
+                iPass.value = "";
+            }
+            else {
+                // TODO: Iriamos al servidor a consultar si el usuario y la cotraseña son correctas
+                alert("Gracias por intentar logearse!\nEsta función llegará pronto a Smart Home Web Client!");
+                this.clearFormLogin();
+            }
+        }
+
+        else if (event.target.id == "btnCancelLogin") {
+            // Borrar datos del form para la proxima vez que se vuelva a abrir.
+            this.clearFormLogin();
+        }
+
         else {
             console.log("Evento desconocido: " + event.id);
         }
@@ -288,7 +310,7 @@ class Main implements EventListenerObject, HttpResponse {
             this.hideList();
         }
     }
-    
+
     // Mostrar la lista de dispositivos.
     showList() {
         var ulDisp = document.getElementById("listaDisp");
@@ -302,6 +324,7 @@ class Main implements EventListenerObject, HttpResponse {
         btnToggleListarLabel.textContent = 'Colapsar';
         btnToggleListarIcon.textContent = 'arrow_drop_up';
     }
+
     // Esconder la lista de dispositivos.
     hideList() {
         var ulDisp = document.getElementById("listaDisp");
@@ -329,7 +352,6 @@ class Main implements EventListenerObject, HttpResponse {
         M.updateTextFields();
     }
 }
-
 
 window.addEventListener("load", () => {
 
@@ -366,5 +388,4 @@ window.addEventListener("load", () => {
 
     var tooltips = document.querySelectorAll('.tooltipped');
     M.Tooltip.init(tooltips, { enterDelay: 200 });
-
 });
