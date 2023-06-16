@@ -17,6 +17,7 @@ var validations = require('./validations');
 //=======[ Main module code ]==================================================
 
 app.get('/devices/', function (req, res, gnext) {
+    // Enviar todos los dispositivos de la base de datos.
     utils.query("select * from Devices", function (err, rsp, fields) {
         if (err != null) {
             var msg = "Error al buscar los datos." + err;
@@ -31,9 +32,10 @@ app.get('/devices/', function (req, res, gnext) {
 });
 
 app.post('/device/', function (req, res) {
-
+    // Agregar un dispositivo nuevo.
     console.log("Agregar dispositivo = " + req.body.name + " " + req.body.description + " " + req.body.type + " " + req.body.state);
 
+    // Validar datos del dispositivo.
     if (!(validations.validateDeviceName(req.body.name) && validations.validateDeviceDescription(req.body.description) &&
         validations.validateDeviceType(req.body.type) && validations.validateDeviceState(req.body.state))) {
 
@@ -60,7 +62,9 @@ app.post('/device/', function (req, res) {
 });
 
 app.delete('/device/', function (req, res) {
+    // Eliminar un dipositivo por su ID.
     console.log("Eliminar elemento id = " + req.body.id);
+
     utils.query("delete from Devices where id = " + req.body.id, function (err, rsp, fields) {
         if (err != null) {
             var msg = "Error al borrar los datos." + err;
@@ -76,6 +80,7 @@ app.delete('/device/', function (req, res) {
 });
 
 app.put('/device/', function (req, res) {
+    // Modificar un dispositivo accediendo por su ID.
     console.log("Editar dispositivo = " + req.body.id + " " + req.body.name + " " + req.body.description + " " + req.body.type);
 
     // Validar datos del dispositivo.
@@ -103,7 +108,8 @@ app.put('/device/', function (req, res) {
 
 
 app.put('/state/', function (req, res) {
-
+    // Modificar el estado de un dispositivo accediendo por su ID.
+    
     // Validar que el valor este entre 0 y 100 inclusive.
     if (!(validations.validateDeviceState(req.body.state))) {
         var msg = "Error al actualizar los datos: datos invalidos.";
