@@ -36,7 +36,7 @@ app.post('/device/', function (req, res) {
 
     if (!(validations.validateDeviceName(req.body.name) && validations.validateDeviceDescription(req.body.description) &&
         validations.validateDeviceType(req.body.type) && validations.validateDeviceState(req.body.state))) {
-            
+
         var msg = "Error al insertar los datos: datos invalidos.";
         console.log(msg);
         res.send(msg).status(409);
@@ -60,7 +60,7 @@ app.post('/device/', function (req, res) {
 });
 
 app.delete('/device/', function (req, res) {
-    console.log("eliminar elemento id = " + req.body.id);
+    console.log("Eliminar elemento id = " + req.body.id);
     utils.query("delete from Devices where id = " + req.body.id, function (err, rsp, fields) {
         if (err != null) {
             var msg = "Error al borrar los datos." + err;
@@ -76,9 +76,17 @@ app.delete('/device/', function (req, res) {
 });
 
 app.put('/device/', function (req, res) {
-    console.log("editar dispositivo = " + req.body.id + " " + req.body.name + " " + req.body.description + " " + req.body.type);
+    console.log("Editar dispositivo = " + req.body.id + " " + req.body.name + " " + req.body.description + " " + req.body.type);
 
-    // TODO: Validar datos.
+    // Validar datos del dispositivo.
+    if (!(validations.validateDeviceName(req.body.name) && validations.validateDeviceDescription(req.body.description)
+        && validations.validateDeviceType(req.body.type))) {
+            var msg = "Error al actualizar los datos: datos invalidos.";
+            console.log(msg);
+            res.send(msg).status(409);
+            return;
+    }
+
     utils.query("update Devices set name = '" + req.body.name + "', description = '" + req.body.description + "', type = " + req.body.type + " where id = " + req.body.id, function (err, rsp, fields) {
         if (err != null) {
             var msg = "Error al actualizar los datos." + err;
@@ -95,7 +103,15 @@ app.put('/device/', function (req, res) {
 
 
 app.put('/state/', function (req, res) {
-    // TODO: validar datos.
+
+    // Validar que el valor este entre 0 y 100 inclusive.
+    if (!(validations.validateDeviceState(req.body.state))) {
+        var msg = "Error al actualizar los datos: datos invalidos.";
+        console.log(msg);
+        res.send(msg).status(409);
+        return;
+    }
+
     utils.query("update Devices set state = " + req.body.state + " where id = " + req.body.id, function (err, rsp, fields) {
         if (err != null) {
             var msg = "Error al actualizar los datos." + err;
