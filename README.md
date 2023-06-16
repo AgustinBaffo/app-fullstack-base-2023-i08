@@ -5,11 +5,11 @@
 Web App Full Stack
 =======================
 
-Este proyecto se desarrllo como trabajo final de la materia Desarrollo de Aplicaciones Web, en el marco de la carrera de [Especialización en IoT](https://lse.posgrados.fi.uba.ar/posgrados/especializaciones/internet-de-las-cosas) de la Universidad de Buenos Aires. Para el desarrollo, se tomo como base el respositorio porporcionado por la cátedra: https://github.com/mramos88/app-fullstack-base-2023-i08. 
+Este proyecto se desarrolló como trabajo final de la materia Desarrollo de Aplicaciones Web, en el marco de la carrera de [Especialización en IoT](https://lse.posgrados.fi.uba.ar/posgrados/especializaciones/internet-de-las-cosas) de la Universidad de Buenos Aires. Para el desarrollo, se tomó como base el respositorio porporcionado por la cátedra: https://github.com/mramos88/app-fullstack-base-2023-i08. 
 
 El proyecto consiste en una aplicación web fullstack que se ejecuta sobre el ecosistema `Docker`. Está compuesta por un compilador de `TypeScript` que te permite utilizar este superset de JavaScript para poder programar un `cliente web`. También tiene un servicio en `NodeJS` que te permite ejecutar código en backend y al mismo tiempo disponibilizar el código del cliente web para interactar con el servicio. Además tiene una `base de datos` MySQL que puede interactuar con el backend para guardar y consultar datos, y de manera adicional trae un `administrador` de base de datos para poder administrar la base en caso que lo necesites. Ademas, la aplicación IoT base se encarga de crear una tabla llamada `Devices` en la base de datos.
 
-En el transcurso de este proyecto se desarrolló el código de backend y front end que hace uso de esa base de datos y permite visualizar y editar los datos desde el navegador web. La aplicacion permite editar el estado, asi como también crear, eliminar y editar los dispositivos de un hogar inteligente - *como pueden ser luces, TVs, ventiladores, persianas, enchufes y otros*. 
+En el transcurso de este proyecto se desarrolló el código de backend y frontend que hace uso de esa base de datos y permite visualizar y editar los datos desde el navegador web. La aplicacion permite editar el estado, asi como también crear, eliminar y editar los dispositivos de un hogar inteligente - *como pueden ser luces, TVs, ventiladores, persianas, enchufes y otros*. 
 
 En la siguiente imagen se muestra una captura de pantalla de la página principal de la aplicacion:
 
