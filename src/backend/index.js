@@ -11,6 +11,9 @@ app.use(express.json());
 // to serve static files
 app.use(express.static('/home/node/app/static/'));
 
+// Importar funciones utiles
+var validations = require('./validations');
+
 //=======[ Main module code ]==================================================
 
 app.get('/devices/', function (req, res, gnext) {
@@ -30,7 +33,8 @@ app.get('/devices/', function (req, res, gnext) {
 app.post('/device/', function (req, res) {
     console.log("agregar dispositivo = " + req.body.name + " " + req.body.description + " " + req.body.type + " " + req.body.state);
 
-    //TODO: validar datos.
+    // TODO: validar datos.
+
     var qry = "insert into Devices (name, description, type, state) values ('" + req.body.name + "','" + req.body.description + "'," + req.body.type + "," + req.body.state + ")";
     console.log(qry);
     utils.query(qry, function (err, rsp, fields) {
@@ -66,7 +70,7 @@ app.delete('/device/', function (req, res) {
 app.put('/device/', function (req, res) {
     console.log("editar dispositivo = " + req.body.id + " " + req.body.name + " " + req.body.description + " " + req.body.type);
 
-    //TODO: Validar datos.
+    // TODO: Validar datos.
     utils.query("update Devices set name = '" + req.body.name + "', description = '" + req.body.description + "', type = " + req.body.type + " where id = " + req.body.id, function (err, rsp, fields) {
         if (err != null) {
             var msg = "Error al actualizar los datos." + err;
@@ -83,7 +87,7 @@ app.put('/device/', function (req, res) {
 
 
 app.put('/state/', function (req, res) {
-    //TODO: validar datos.
+    // TODO: validar datos.
     utils.query("update Devices set state = " + req.body.state + " where id = " + req.body.id, function (err, rsp, fields) {
         if (err != null) {
             var msg = "Error al actualizar los datos." + err;
