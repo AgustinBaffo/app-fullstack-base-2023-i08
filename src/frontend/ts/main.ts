@@ -71,9 +71,6 @@ class Main implements EventListenerObject, HttpResponse {
                 ulDisp.innerHTML += item;
             }
 
-            ulDisp.style.display = '';
-
-
             for (var disp of lista) {
                 var rangeState = document.getElementById("rangeState_" + disp.id);
                 rangeState.addEventListener("click", this);
@@ -95,31 +92,10 @@ class Main implements EventListenerObject, HttpResponse {
         this.framework.ejecutarBackEnd("GET", "http://localhost:8000/devices", this, {}, listarCallback);
     }
 
-    hideList() {
-        var ulDisp = document.getElementById("listaDisp");
-        ulDisp.style.display = 'none';  // Ocultar la lista
-        ulDisp.innerHTML = "";          // Borrar contenido html
-    }
-
     handleEvent(event) {
         var elemento = <HTMLInputElement>event.target;
         if (event.target.id == "btnToggleListar") {
-
-            var btnToggleListarLabel = document.getElementById('btnToggleListarLabel');
-            var btnToggleListarIcon = document.getElementById('btnToggleListarIcon');
-            var listaDisp = document.getElementById('listaDisp');
-
-            // Verificar el estado inicial de la lista y mostrar el botón adecuado
-            if (listaDisp.style.display === 'none') {
-                btnToggleListarLabel.textContent = 'Colapsar';
-                btnToggleListarIcon.textContent = 'arrow_drop_up';
-
-                this.updateDevicesList(); // Mostrar lista
-            } else {
-                btnToggleListarLabel.textContent = 'Listar';
-                btnToggleListarIcon.textContent = 'arrow_drop_down';
-                this.hideList();
-            }
+            this.toggleList();
         }
         else if (event.target.id == "confirmEditDevice") {
 
@@ -138,6 +114,7 @@ class Main implements EventListenerObject, HttpResponse {
 
             var confirmEditDeviceCallback = (res: string) => {
                 this.updateDevicesList();
+                this.showList();
             }
 
             // Verificar si se esta editando o agregando un dispositivo y enviar los datos al backend.
@@ -183,7 +160,7 @@ class Main implements EventListenerObject, HttpResponse {
                 parrafo.innerHTML = "Espere...";
             } else {
                 alert("el nombre de usuario es invalido");
-            }
+        }
 
         }
         else if (elemento.id.startsWith("rangeState_")) {
@@ -280,6 +257,42 @@ class Main implements EventListenerObject, HttpResponse {
             console.log("Evento desconocido: " + event.id);
         }
     }
+
+    // Actualiza el boton para mostar y ocultar la lista.
+    toggleList(){
+        var listaDisp = document.getElementById('listaDisp');
+
+        // Verificar el estado inicial de la lista y mostrar el botón adecuado.
+        if (listaDisp.style.display === 'none') {
+            this.showList();
+        } else {
+            this.hideList();
+        }
+    }
+    showList(){
+        var ulDisp = document.getElementById("listaDisp");
+        this.updateDevicesList();   // Actualizar lista
+        ulDisp.style.display = '';  // Mostrar lista
+
+        // Actualizar boton.
+        var btnToggleListarLabel = document.getElementById('btnToggleListarLabel');
+        var btnToggleListarIcon = document.getElementById('btnToggleListarIcon');
+
+        btnToggleListarLabel.textContent = 'Colapsar';
+        btnToggleListarIcon.textContent = 'arrow_drop_up';
+    }
+    hideList() {
+        var ulDisp = document.getElementById("listaDisp");
+        ulDisp.style.display = 'none';  // Ocultar la lista
+        ulDisp.innerHTML = "";          // Borrar contenido html
+
+        // Actualizar boton.
+        var btnToggleListarLabel = document.getElementById('btnToggleListarLabel');
+        var btnToggleListarIcon = document.getElementById('btnToggleListarIcon');
+        btnToggleListarLabel.textContent = 'Listar';
+        btnToggleListarIcon.textContent = 'arrow_drop_down';
+    }
+
 
     // Resetea el form para actualizar dispositivos.
     clearFormEditDevice() {
