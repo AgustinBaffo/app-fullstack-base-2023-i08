@@ -7,9 +7,12 @@ function validateDeviceDescription(description) {
     return typeof param === 'string' && param !== null && param.length > 0 && param.length < 128;    
 }
 
-function validateDeviceDescription(param) {
-    // TODO: implement
-    return false;
+function validateDeviceType(param) {
+    return Number.isInteger(param) && param >= 0;
+}
+
+function validateDeviceState(param) {
+    return Number.isInteger(param) && param >= 0 && param <= 100;
 }
 
 // Exporta las funciones para que puedan ser utilizadas desde otro archivo

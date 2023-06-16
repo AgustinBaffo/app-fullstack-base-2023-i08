@@ -21,6 +21,8 @@ class Main implements EventListenerObject, HttpResponse {
         // Invocar el callback personalizado si existe. Si no existe, solo publicar la respuesta.
         if (callback) {
             callback(res);
+        }else{
+            console.log(res);
         }
     }
 

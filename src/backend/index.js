@@ -31,12 +31,20 @@ app.get('/devices/', function (req, res, gnext) {
 });
 
 app.post('/device/', function (req, res) {
-    console.log("agregar dispositivo = " + req.body.name + " " + req.body.description + " " + req.body.type + " " + req.body.state);
 
-    // TODO: validar datos.
+    console.log("Agregar dispositivo = " + req.body.name + " " + req.body.description + " " + req.body.type + " " + req.body.state);
+
+    if (!(validations.validateDeviceName(req.body.name) && validations.validateDeviceDescription(req.body.description) &&
+        validations.validateDeviceType(req.body.type) && validations.validateDeviceState(req.body.state))) {
+            
+        var msg = "Error al insertar los datos: datos invalidos.";
+        console.log(msg);
+        res.send(msg).status(409);
+        return;
+    }
 
     var qry = "insert into Devices (name, description, type, state) values ('" + req.body.name + "','" + req.body.description + "'," + req.body.type + "," + req.body.state + ")";
-    console.log(qry);
+
     utils.query(qry, function (err, rsp, fields) {
         if (err != null) {
             var msg = "Error al insertar los datos: " + err;
