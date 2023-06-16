@@ -99,18 +99,32 @@ class Main implements EventListenerObject, HttpResponse {
         }
         else if (event.target.id == "confirmEditDevice") {
 
+            // Recuperar datos del form.
             var name = <HTMLInputElement>document.getElementById("editNameDevice");
             var description = <HTMLInputElement>document.getElementById("editDescriptionDevice");
             var type = <HTMLSelectElement>document.getElementById("editTypeDevice");
 
-            // TODO: Validar nombres
+            // Validar datos.
+            if (!name.value || name.value.length <= 0) { // Max length 64 en html.
+                alert("El nombre del dispositivo no puede estar vacio.");
+                return;
+            }
+            if (!description.value || description.value.length <= 0) { // Max length 128 en html.
+                alert("La descripcion del dispositivo no puede estar vacia.");
+                return;
+            }
+            if (!type.value || type.value.length < 0) {
+                alert("El tipo de dispositivo no puede estar vacio.");
+                return;
+            }
 
+            // Crear dispositivos y enviar datos al servidor
             var device: Device = new Device();
             device.description = description.value;
             device.name = name.value;
             device.type = parseInt(type.value, 0);
 
-            this.clearFormEditDevice();
+            this.clearFormEditDevice();  // Borrar datos del form para la proxima vez que se vuelva a abrir.
 
             var confirmEditDeviceCallback = (res: string) => {
                 this.updateDevicesList();
@@ -121,16 +135,19 @@ class Main implements EventListenerObject, HttpResponse {
             var editDeviceForm: HTMLElement = document.getElementById("editDeviceFormType");
 
             if (editDeviceForm.classList.contains("edit-device-form")) {
+                // Se esta editando el dispositivo. Enviar PUT para actualizar los datos.
                 var deviceID = parseInt(editDeviceForm.getAttribute("device-id"), 0);
                 if (!deviceID || deviceID <= 0) {
                     console.log("Error al procesar el formulario de edicion de dispositivo. ID de dispositivo invalido: " + deviceID);
                     return;
                 }
+                
                 device.id = deviceID;
                 console.log("confirmEditDevice: actualizando " + JSON.stringify(device));
                 this.framework.ejecutarBackEnd("PUT", "http://localhost:8000/device", this, device, confirmEditDeviceCallback);
 
             } else if (editDeviceForm.classList.contains("add-device-form")) {
+                // Se esta agregando el dispositivo. Enviar POST con los nuevos datos.
                 device.state = 0;   // Por defecto esta apagado.
                 console.log("confirmEditDevice: agregando " + JSON.stringify(device));
                 this.framework.ejecutarBackEnd("POST", "http://localhost:8000/device", this, device, confirmEditDeviceCallback);
@@ -138,13 +155,9 @@ class Main implements EventListenerObject, HttpResponse {
             } else {
                 console.log("Error al procesar el formulario de edicion de dispositivo. Acción desconocida.")
             }
-
-
         }
         else if (event.target.id == "cancelEditDevice") {
-
-            this.clearFormEditDevice();
-
+            this.clearFormEditDevice();  // Borrar datos del form para la proxima vez que se vuelva a abrir.
         }
         else if (event.target.id == "btnLogin") {
             var iUser = <HTMLInputElement>document.getElementById("iUser");
@@ -275,6 +288,8 @@ class Main implements EventListenerObject, HttpResponse {
             this.hideList();
         }
     }
+    
+    // Mostrar la lista de dispositivos.
     showList() {
         var ulDisp = document.getElementById("listaDisp");
         this.updateDevicesList();   // Actualizar lista
@@ -287,6 +302,7 @@ class Main implements EventListenerObject, HttpResponse {
         btnToggleListarLabel.textContent = 'Colapsar';
         btnToggleListarIcon.textContent = 'arrow_drop_up';
     }
+    // Esconder la lista de dispositivos.
     hideList() {
         var ulDisp = document.getElementById("listaDisp");
         ulDisp.style.display = 'none';  // Ocultar la lista
@@ -299,13 +315,13 @@ class Main implements EventListenerObject, HttpResponse {
         btnToggleListarIcon.textContent = 'arrow_drop_down';
     }
 
-
     // Resetea el form para actualizar dispositivos.
     clearFormEditDevice() {
         var form = <HTMLFormElement>document.getElementById("deviceForm");
         form.reset();
         M.updateTextFields();
     }
+
     // Resetear el form de login.
     clearFormLogin() {
         var form = <HTMLFormElement>document.getElementById("loginForm");
