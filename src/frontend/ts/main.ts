@@ -21,7 +21,7 @@ class Main implements EventListenerObject, HttpResponse {
         // Invocar el callback personalizado si existe. Si no existe, solo publicar la respuesta.
         if (callback) {
             callback(res);
-        }else{
+        } else {
             console.log(res);
         }
     }
@@ -147,21 +147,27 @@ class Main implements EventListenerObject, HttpResponse {
 
         }
         else if (event.target.id == "btnLogin") {
-
             var iUser = <HTMLInputElement>document.getElementById("iUser");
             var iPass = <HTMLInputElement>document.getElementById("iPass");
             var username: string = iUser.value;
             var password: string = iPass.value;
 
-
-            if (username.length > 3 && password.length > 3) {
-                // Iriamos al servidor a consultar si el usuario y la cotraseña son correctas
-                var parrafo = document.getElementById("parrafo");
-                parrafo.innerHTML = "Espere...";
-            } else {
-                alert("el nombre de usuario es invalido");
+            if (username.length < 4) {
+                alert("El nombre de usuario es invalido.");
+                iPass.value = "";
+            }
+            else if (password.length < 4) {
+                alert("Contraseña invalida.");
+                iPass.value = "";
+            }
+            else {
+                // TODO: Iriamos al servidor a consultar si el usuario y la cotraseña son correctas
+                alert("Gracias por intentar logearse!\nEsta función llegará pronto a Smart Home Web Client!");
+                this.clearFormLogin();
+            }
         }
-
+        else if (event.target.id == "btnCancelLogin") {
+            this.clearFormLogin();
         }
         else if (elemento.id.startsWith("rangeState_")) {
 
@@ -259,7 +265,7 @@ class Main implements EventListenerObject, HttpResponse {
     }
 
     // Actualiza el boton para mostar y ocultar la lista.
-    toggleList(){
+    toggleList() {
         var listaDisp = document.getElementById('listaDisp');
 
         // Verificar el estado inicial de la lista y mostrar el botón adecuado.
@@ -269,7 +275,7 @@ class Main implements EventListenerObject, HttpResponse {
             this.hideList();
         }
     }
-    showList(){
+    showList() {
         var ulDisp = document.getElementById("listaDisp");
         this.updateDevicesList();   // Actualizar lista
         ulDisp.style.display = '';  // Mostrar lista
@@ -300,6 +306,12 @@ class Main implements EventListenerObject, HttpResponse {
         form.reset();
         M.updateTextFields();
     }
+    // Resetear el form de login.
+    clearFormLogin() {
+        var form = <HTMLFormElement>document.getElementById("loginForm");
+        form.reset();
+        M.updateTextFields();
+    }
 }
 
 
@@ -320,6 +332,9 @@ window.addEventListener("load", () => {
 
     const btnLogin = document.getElementById("btnLogin");
     btnLogin.addEventListener("click", main);
+
+    const btnCancelLogin = document.getElementById("btnCancelLogin");
+    btnCancelLogin.addEventListener("click", main);
 
     const cancelEditDevice: HTMLElement = document.getElementById("cancelEditDevice");
     cancelEditDevice.addEventListener("click", main);

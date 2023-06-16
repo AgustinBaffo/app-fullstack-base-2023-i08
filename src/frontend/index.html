@@ -43,21 +43,23 @@
                 <div class="modal-content">
                     <!-- Contenido del modal de inicio de sesión -->
                     <h4>Inicio de sesión</h4>
-                    <div class="row">
-                        <div class="input-field col s12 xl6">
-                            <i class="material-icons prefix">accessibility</i>
-                            <label for="iUser">Usuario</label>
-                            <input type="text" placeholder="jperez" id="iUser">
+                    <form id="loginForm">
+                        <div class="row">
+                            <div class="input-field col s12 xl6">
+                                <i class="material-icons prefix">accessibility</i>
+                                <label for="iUser">Usuario</label>
+                                <input type="text" placeholder="jperez" id="iUser">
+                            </div>
+                            <div class="input-field col s12 xl6">
+                                <i class="material-icons prefix">lock</i>
+                                <label for="iPass">Contraseña</label>
+                                <input type="password" id="iPass">
+                            </div>
                         </div>
-                        <div class="input-field col s12 xl6">
-                            <i class="material-icons prefix">lock</i>
-                            <label for="iPass">Contraseña</label>
-                            <input type="password" id="iPass">
-                        </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
-                    <a href="#!" class="modal-close waves-effect waves-red btn">Cancelar</a>
+                    <a href="#!" class="modal-close waves-effect waves-red btn" id="btnCancelLogin">Cancelar</a>
                     <a href="#!" class="modal-close waves-effect waves-green btn" id="btnLogin">Login</a>
                 </div>
             </div>
@@ -67,19 +69,20 @@
             <br /><br />
 
             <div class="col">
-                
+
                 <button class="btn waves-effect waves-light button-view left-align" id="btnToggleListar">
                     <i class="material-icons left no-pointer-events" id="btnToggleListarIcon">arrow_drop_down</i>
                     <label class="white-text no-pointer-events" id="btnToggleListarLabel">Listar</label>
                 </button>
-                
+
                 <div class="row">
                     <ul class="collection" id="listaDisp" style="display: none;">
                     </ul>
                 </div>
                 <div class="row right-align">
                     <a class="btn-floating btn-large waves-effect waves-light right-align">
-                        <i class="material-icons tooltipped" id="btnAgregar" data-position="left" data-tooltip="Agregar dispositivo">add</i>
+                        <i class="material-icons tooltipped" id="btnAgregar" data-position="left"
+                            data-tooltip="Agregar dispositivo">add</i>
                     </a>
                 </div>
             </div>
